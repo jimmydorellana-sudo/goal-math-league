@@ -186,6 +186,75 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   .banner { animation: none; }
 }
+
+/* ---------- v3: match types, written addition, helper tools ---------- */
+.fixture .tag { display: inline-block; margin-top: 4px; padding: 1px 9px; border-radius: 999px; background: var(--board); color: var(--chalk); font-size: 13px; font-weight: 600; }
+.fixture:disabled .tag { background: #6d7a72; }
+.fixture .num.t { background: var(--ball); color: var(--ink); }
+.howto { margin: 0; text-align: center; font-size: 16px; font-weight: 500; color: #b9c8da; text-wrap: balance; }
+.dot.skip { border-style: dashed; opacity: .55; }
+
+.answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.ans { border: 0; background: none; padding: 0; }
+.ans span {
+  display: grid; place-items: center; height: 68px; background: var(--chalk); color: var(--ink);
+  border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 5px 0 var(--pitch-deep);
+  font-family: var(--display); font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums;
+}
+.ans:not(:disabled):hover span { background: var(--ball); }
+.ans:not(:disabled):active span { transform: translateY(3px); box-shadow: 0 2px 0 var(--pitch-deep); }
+.ans.out span { opacity: .45; text-decoration: line-through; }
+.ans.right span { background: var(--ball); }
+
+.sheet { display: flex; flex-direction: column; gap: 12px; }
+.sheet-prompt { margin: 0; font-size: 19px; font-weight: 600; min-height: 2.8em; text-wrap: balance; }
+.sheet-body { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: center; }
+.work {
+  display: grid; grid-template-columns: 30px repeat(3, 48px); gap: 4px 2px; justify-items: center; align-items: center;
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px; padding: 12px 14px;
+  font-family: var(--display); font-size: 38px; line-height: 1.1; font-variant-numeric: tabular-nums; flex: none;
+}
+.work .rule { grid-column: 1 / -1; width: 100%; height: 4px; background: var(--ink); border-radius: 2px; }
+.work .box { width: 44px; height: 52px; border: 3px dashed #9aa79f; border-radius: 10px; display: grid; place-items: center; }
+.work .box.small { width: 28px; height: 28px; font-size: 18px; border-width: 2px; border-radius: 7px; }
+.work .box.active { border: 3px solid #b58a00; background: #fff4c2; animation: pulse 1.1s ease-in-out infinite; }
+.work .box.small.active { border-width: 2px; }
+.work .box.ok { border-style: solid; border-color: #1b7c3d; color: #1b7c3d; }
+.work .box.shown { border-style: solid; border-color: #c0392b; color: #c0392b; }
+.work .box.shake { animation: shake .35s; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 5px rgba(255,210,63,.55); } }
+@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.keypad { display: grid; grid-template-columns: repeat(5, 52px); gap: 8px; }
+.key {
+  height: 54px; border: 3px solid var(--ink); border-radius: 12px; background: var(--board); color: var(--chalk);
+  font-family: var(--display); font-size: 26px; box-shadow: 0 4px 0 rgba(0,0,0,.35);
+}
+.key:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.35); }
+
+.tools { display: flex; flex-direction: column; gap: 14px; }
+.tool-tabs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.tool-title { font-family: var(--display); font-size: 18px; text-transform: uppercase; margin-right: 4px; }
+.tab, .mini {
+  border: 3px solid var(--ink); background: #fff; color: var(--ink); border-radius: 999px;
+  padding: 6px 14px; font-weight: 600; font-size: 16px; min-height: 42px;
+}
+.tab[aria-pressed="true"] { background: var(--board); color: var(--chalk); }
+.mini:disabled { opacity: .35; cursor: not-allowed; }
+.tool-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.mat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.mat-col { background: #fff; border: 3px solid var(--ink); border-radius: 12px; padding: 8px 6px; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.mat-head { font-weight: 700; font-size: 15px; text-transform: capitalize; }
+.chips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 100%; max-width: 130px; min-height: 80px; align-content: start; }
+.chip { aspect-ratio: 1; min-width: 0; border-radius: 50%; display: grid; place-items: center; font-size: 8px; font-weight: 700; border: 1.5px solid var(--ink); color: var(--ink); }
+.chip.c0 { background: var(--ball); font-size: 7px; } .chip.c1 { background: #ff9d8a; } .chip.c2 { background: #bfe3ff; font-size: 9px; }
+.mat-count { font-family: var(--display); font-size: 24px; line-height: 1; }
+.mat-btns { display: flex; gap: 6px; }
+.mat-btns .mini { width: 44px; padding: 0; font-size: 22px; line-height: 1; }
+.chart { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; }
+.cell { border: 2px solid #c9c5b1; background: #fff; color: var(--ink); border-radius: 6px; padding: 0; aspect-ratio: 1; font-size: clamp(11px, 3.1vw, 16px); font-weight: 600; font-variant-numeric: tabular-nums; }
+.cell.on { background: var(--ball); border-color: var(--ink); }
+.pad { display: block; width: 100%; height: 230px; background: #fff; border: 3px solid var(--ink); border-radius: 12px; touch-action: none; cursor: crosshair; }
+@media (prefers-reduced-motion: reduce) { .work .box.active, .work .box.shake { animation: none; } }
 </style>
 </head>
 <body>
@@ -209,10 +278,13 @@ button { cursor: pointer; }
       </div>
     </div>
 
-    <h2 class="section-title">Your season</h2>
-    <ol class="fixtures" id="fixtures"></ol>
+    <h2 class="section-title">Training ground</h2>
+    <ol class="fixtures" id="fixtures-training"></ol>
 
-    <p class="grownups">Grown-ups: the six matches follow Grade 2 Module 4 in order, from mental math with tens up to adding and subtracting within 200.
+    <h2 class="section-title">Your season</h2>
+    <ol class="fixtures" id="fixtures-season"></ol>
+
+    <p class="grownups">Grown-ups: training covers single-digit subtraction and adding in columns. The six season matches follow Grade 2 Module 4 in order.
       <button class="linkish" id="unlock-all" type="button">Open every match</button>
     </p>
   </section>
@@ -231,6 +303,7 @@ button { cursor: pointer; }
         <div class="team away"><span id="away-name">Rivals</span><span class="swatch" id="sw-away"></span></div>
       </div>
       <div class="dots" id="dots" aria-hidden="true"></div>
+      <p class="howto" id="howto"></p>
       <p class="story" id="story" hidden></p>
       <p class="equation" id="equation"></p>
     </div>
@@ -238,13 +311,38 @@ button { cursor: pointer; }
     <div class="scene" id="scene">
       <canvas id="pitch" width="1120" height="800" aria-hidden="true"></canvas>
       <div class="zones" id="zones">
-        <button class="zone" type="button" id="zone-0"><span></span></button>
-        <button class="zone" type="button" id="zone-1"><span></span></button>
-        <button class="zone" type="button" id="zone-2"><span></span></button>
+        <button class="zone" type="button" id="zone-0" data-base="zone"><span></span></button>
+        <button class="zone" type="button" id="zone-1" data-base="zone"><span></span></button>
+        <button class="zone" type="button" id="zone-2" data-base="zone"><span></span></button>
       </div>
       <div class="banner" id="banner" hidden></div>
     </div>
     <p id="live" aria-live="polite" style="position:absolute;left:-9999px"></p>
+
+    <div class="answers" id="answers" hidden>
+      <button class="ans" type="button" id="ans-0" data-base="ans"><span></span></button>
+      <button class="ans" type="button" id="ans-1" data-base="ans"><span></span></button>
+      <button class="ans" type="button" id="ans-2" data-base="ans"><span></span></button>
+    </div>
+
+    <div class="card sheet" id="sheet" hidden>
+      <p class="sheet-prompt" id="sheet-prompt" aria-live="polite"></p>
+      <div class="sheet-body">
+        <div class="work" id="work"></div>
+        <div class="keypad" id="keypad">
+          <button class="key" type="button" id="key-1" data-d="1">1</button>
+          <button class="key" type="button" id="key-2" data-d="2">2</button>
+          <button class="key" type="button" id="key-3" data-d="3">3</button>
+          <button class="key" type="button" id="key-4" data-d="4">4</button>
+          <button class="key" type="button" id="key-5" data-d="5">5</button>
+          <button class="key" type="button" id="key-6" data-d="6">6</button>
+          <button class="key" type="button" id="key-7" data-d="7">7</button>
+          <button class="key" type="button" id="key-8" data-d="8">8</button>
+          <button class="key" type="button" id="key-9" data-d="9">9</button>
+          <button class="key" type="button" id="key-0" data-d="0">0</button>
+        </div>
+      </div>
+    </div>
 
     <div class="card coach" id="coach" hidden>
       <h3 id="coach-title">Coach says</h3>
@@ -255,6 +353,42 @@ button { cursor: pointer; }
     </div>
 
     <button class="big-btn" id="next" type="button" hidden>Next shot</button>
+
+    <div class="card tools" id="tools">
+      <div class="tool-tabs" role="group" aria-label="Helper tools">
+        <span class="tool-title">Helper tools</span>
+        <button class="tab" type="button" id="tool-blocks" aria-pressed="false">Tens and ones</button>
+        <button class="tab" type="button" id="tool-chart" aria-pressed="false">Number chart</button>
+        <button class="tab" type="button" id="tool-pad" aria-pressed="false">Scratch pad</button>
+      </div>
+      <div id="panel-blocks" hidden>
+        <div class="mat" id="mat"></div>
+        <div class="tool-row">
+          <button class="mini" type="button" id="bundle-ones" data-act="bundle-ones">Bundle 10 ones into 1 ten</button>
+          <button class="mini" type="button" id="break-ten" data-act="break-ten">Break 1 ten into 10 ones</button>
+          <button class="mini" type="button" id="bundle-tens" data-act="bundle-tens">Bundle 10 tens into 1 hundred</button>
+          <button class="mini" type="button" id="break-hundred" data-act="break-hundred">Break 1 hundred into 10 tens</button>
+        </div>
+        <div class="tool-row">
+          <button class="mini" type="button" id="mat-show" data-act="show">Show</button>
+          <button class="mini" type="button" id="mat-add" data-act="add">Add</button>
+          <button class="mini" type="button" id="mat-clear" data-act="clear">Clear</button>
+        </div>
+      </div>
+      <div id="panel-chart" hidden>
+        <div class="chart" id="chart"></div>
+        <div class="tool-row">
+          <button class="mini" type="button" id="chart-range">Show 101 to 200</button>
+          <button class="mini" type="button" id="chart-clear">Clear</button>
+        </div>
+      </div>
+      <div id="panel-pad" hidden>
+        <canvas class="pad" id="pad" aria-label="Scratch pad for drawing"></canvas>
+        <div class="tool-row">
+          <button class="mini" type="button" id="pad-clear">Clear</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ================= RESULT ================= -->
@@ -318,7 +452,7 @@ function addQ(a, b) {
   steps.push(`${a} + ${b} = ${ans}`);
   const priority = [c1 ? ans - 10 : null, c2 && ans - 100 >= 20 ? ans - 100 : null].filter(x => x !== null);
   const opts = makeOpts(ans, priority, [ans + 10, ans - 10, ans + 1, ans - 1, ans + 2, ans - 2]);
-  return { display: `${a} + ${b} = ?`, solved: `${a} + ${b} = ${ans}`, ans, opts, steps, text: null,
+  return { display: `${a} + ${b} = ?`, solved: `${a} + ${b} = ${ans}`, ans, opts, steps, text: null, op: '+', nums: [a, b],
     v: { op: '+', a, b, marks: [c2 ? '1' : '', c1 ? '1' : '', ''] } };
 }
 
@@ -344,22 +478,29 @@ function subQ(a, b) {
   const priority = [flip, ans + 10, a >= 100 ? ans + 100 : null].filter(x => x !== null);
   const opts = makeOpts(ans, priority, [ans - 10, ans + 1, ans - 1, ans + 2, ans - 2]);
   const marks = [h !== A[0] ? String(h) : '', t !== A[1] ? String(t) : '', o !== A[2] ? String(o) : ''];
-  return { display: `${a} − ${b} = ?`, solved: `${a} − ${b} = ${ans}`, ans, opts, steps, text: null,
+  return { display: `${a} − ${b} = ?`, solved: `${a} − ${b} = ${ans}`, ans, opts, steps, text: null, op: '−', nums: [a, b],
     v: { op: '−', a, b, marks } };
 }
 
 /* ----- number pickers for each Module 4 topic ----- */
 const gen = {
+  subFact(easy) {
+    const a = easy ? rnd(2, 9) : rnd(11, 18), b = easy ? rnd(1, a - 1) : rnd(a - 9, 9), ans = a - b;
+    const steps = easy ? [`Start at ${a}. Count back ${b}.`] : [`Break ${a} into 10 and ${a - 10}.`, `10 − ${b} = ${10 - b}.`, `${10 - b} + ${a - 10} = ${ans}.`];
+    steps.push(`${a} − ${b} = ${ans}`);
+    return { display: `${a} − ${b} = ?`, solved: `${a} − ${b} = ${ans}`, ans, text: null, v: null, op: '−', nums: [a, b],
+      opts: makeOpts(ans, [ans + 1, ans - 1], [ans + 2, ans - 2, b]), steps };
+  },
   addTens() { const a = rnd(11, 68), k = rnd(1, Math.floor((99 - a) / 10)), b = k * 10, ans = a + b, A = digits(a);
-    return { display: `${a} + ${b} = ?`, solved: `${a} + ${b} = ${ans}`, ans, text: null, v: null,
+    return { display: `${a} + ${b} = ?`, solved: `${a} + ${b} = ${ans}`, ans, text: null, v: null, op: '+', nums: [a, b],
       opts: makeOpts(ans, [a + k, ans + 10], [ans - 10, ans + 1, ans - 1]),
       steps: [`Adding ${tensW(k)} only changes the tens. The ones stay at ${A[2]}.`, `${tensW(A[1])} + ${tensW(k)} = ${tensW(A[1] + k)}.`, `${a} + ${b} = ${ans}`] }; },
   subTens() { const a = rnd(31, 99), k = rnd(1, Math.floor(a / 10) - 1), b = k * 10, ans = a - b, A = digits(a);
-    return { display: `${a} − ${b} = ?`, solved: `${a} − ${b} = ${ans}`, ans, text: null, v: null,
+    return { display: `${a} − ${b} = ?`, solved: `${a} − ${b} = ${ans}`, ans, text: null, v: null, op: '−', nums: [a, b],
       opts: makeOpts(ans, [a - k, ans - 10], [ans + 10, ans + 1, ans - 1]),
       steps: [`Taking away ${tensW(k)} only changes the tens. The ones stay at ${A[2]}.`, `${tensW(A[1])} − ${tensW(k)} = ${tensW(A[1] - k)}.`, `${a} − ${b} = ${ans}`] }; },
   nextTen() { let a = rnd(11, 89); if (a % 10 === 0) a += rnd(1, 9); const nt = (Math.floor(a / 10) + 1) * 10, ans = nt - a;
-    return { display: `${a} + ? = ${nt}`, solved: `${a} + ${ans} = ${nt}`, ans, text: null, v: null,
+    return { display: `${a} + ? = ${nt}`, solved: `${a} + ${ans} = ${nt}`, ans, text: null, v: null, op: '?', nums: [a],
       opts: makeOpts(ans, [a % 10, ans + 1], [ans - 1, ans + 2, 10]),
       steps: [`Count up from ${a} until you reach ${nt}. How many hops?`, `${a} + ${ans} = ${nt}`] }; },
   add2Regroup() { const ao = rnd(2, 9), bo = rnd(10 - ao, 9), at = rnd(1, 7), bt = rnd(1, 8 - at); return [at * 10 + ao, bt * 10 + bo]; },
@@ -385,7 +526,7 @@ function storyQ(kind, team) {
       `There are ${a} fans in the blue seats and ${b} fans in the red seats. How many fans in all?`,
       `Coach packed ${a} water bottles. Then she packed ${b} more. How many bottles now?`
     ]);
-    q.steps.unshift(`Put the two parts together. Add: ${a} + ${b}.`);
+    q.steps.unshift(`Put the two parts together. Add: ${a} + ${b}.`); q.story = true;
     return q;
   }
   const [a, b] = gen.sub2Regroup(), q = subQ(a, b);
@@ -394,22 +535,37 @@ function storyQ(kind, team) {
     [`${a} kids came to practice. ${b} kids went home early. How many kids are still there?`, `Some went away. Subtract: ${a} − ${b}.`],
     [`${team} made ${a} passes. The other team made ${b} passes. How many more passes did ${team} make?`, `Find the difference. Subtract: ${a} − ${b}.`]
   ]);
-  q.text = t[0]; q.steps.unshift(t[1]);
+  q.text = t[0]; q.steps.unshift(t[1]); q.story = true;
   return q;
 }
 
+/* Steps for working an addition in columns, one digit at a time. */
+function longSteps(q) {
+  const [a, b] = q.nums, A = digits(a), B = digits(b), steps = [];
+  const so = A[2] + B[2], c1 = so >= 10 ? 1 : 0, sT = A[1] + B[1] + c1, c2 = sT >= 10 ? 1 : 0, h = A[0] + B[0] + c2;
+  steps.push({ box: 'o', want: so % 10, prompt: `Add the ones: ${A[2]} + ${B[2]}. Write the ones digit.`, hint: `${A[2]} + ${B[2]} = ${so}. Write ${so % 10} in the ones place.` });
+  if (c1) steps.push({ box: 'c1', want: 1, prompt: `${so} is 1 ten and ${onesW(so - 10)}. Write the new ten on the line.`, hint: 'Write 1 for the 1 new ten.' });
+  steps.push({ box: 't', want: sT % 10, prompt: `Add the tens: ${A[1]} + ${B[1]}${c1 ? ' + 1 new ten' : ''}. Write the tens digit.`, hint: `${A[1]} + ${B[1]}${c1 ? ' + 1' : ''} = ${sT}. Write ${sT % 10} in the tens place.` });
+  if (h > 0) steps.push({ box: 'h', want: h, prompt: c2 ? `${tensW(sT)} is 1 hundred and ${tensW(sT - 10)}. Write the hundreds digit.` : `Now the hundreds. Write the hundreds digit.`, hint: `Write ${h} in the hundreds place.` });
+  return steps;
+}
+
 const LEVELS = [
-  { name: 'Warm-Up Passes', skill: 'Add and take away tens', rival: 'Rocket Rovers', color: '#7c5cff',
+  { id: 't1', group: 'training', kind: 'dribble', name: 'Subtraction Sprint', skill: 'Subtract single digits', rival: 'Cone City', color: '#ff8a1f', max: 9,
+    build: () => [gen.subFact(true), gen.subFact(true), gen.subFact(true), gen.subFact(false), gen.subFact(false), gen.subFact(false)] },
+  { id: 't2', group: 'training', kind: 'long', name: 'Stack and Add', skill: 'Add two-digit numbers in columns', rival: 'Paper Tigers', color: '#00a3b4', max: 99,
+    build: () => [A2('add2Plain'), A2('add2Regroup'), A2('add2Regroup'), A2('add2Regroup'), A2('add2Regroup')] },
+  { id: 's1', group: 'season', kind: 'dribble', name: 'Warm-Up Passes', skill: 'Add and take away tens', rival: 'Rocket Rovers', color: '#7c5cff', max: 99,
     build: () => [gen.addTens(), gen.nextTen(), gen.subTens(), gen.addTens(), gen.subTens(), gen.nextTen()] },
-  { name: 'Bundle Up', skill: 'Add and make a new ten', rival: 'Thunder Town', color: '#ff8a1f',
+  { id: 's2', group: 'season', kind: 'shootout', name: 'Bundle Up', skill: 'Add and make a new ten', rival: 'Thunder Town', color: '#ff8a1f', max: 99,
     build: t => [A2('add2Plain'), A2('add2Regroup'), A2('add2Regroup'), storyQ('add', t), A2('add2Regroup'), A2('add2Regroup')] },
-  { name: 'Break a Ten', skill: 'Subtract and unbundle a ten', rival: 'Dynamo Dragons', color: '#d6336c',
+  { id: 's3', group: 'season', kind: 'keeper', name: 'Break a Ten', skill: 'Subtract and unbundle a ten', rival: 'Dynamo Dragons', color: '#d6336c', max: 99,
     build: t => [S2('sub2Plain'), S2('sub2Regroup'), S2('sub2Regroup'), storyQ('sub', t), S2('sub2Regroup'), S2('sub2Regroup')] },
-  { name: 'Big Scores', skill: 'Add up to 200', rival: 'Real Robots', color: '#00a3b4',
-    build: t => [A2('addBigTens'), A2('addBigTens'), A2('addBigThree'), storyQ('add', t), A2('addBigBoth'), A2('addBigBoth')] },
-  { name: 'Cup Semi-Final', skill: 'Subtract from numbers up to 200', rival: 'Shark City', color: '#3b6cff',
+  { id: 's4', group: 'season', kind: 'long', name: 'Big Scores', skill: 'Add up to 200 in columns', rival: 'Real Robots', color: '#00a3b4', max: 200,
+    build: () => [A2('addBigTens'), A2('addBigTens'), A2('addBigThree'), A2('addBigBoth'), A2('addBigBoth')] },
+  { id: 's5', group: 'season', kind: 'keeper', name: 'Cup Semi-Final', skill: 'Subtract from numbers up to 200', rival: 'Shark City', color: '#3b6cff', max: 199,
     build: t => [S2('subBigHund'), S2('subBigOnes'), S2('subBigBoth'), storyQ('sub', t), S2('subBigBoth'), S2('subBigZero')] },
-  { name: 'Cup Final', skill: 'Everything together', rival: 'Galaxy Stars', color: '#111827',
+  { id: 's6', group: 'season', kind: 'shootout', name: 'Cup Final', skill: 'Everything together', rival: 'Galaxy Stars', color: '#111827', max: 200,
     build: t => [pick([gen.addTens, gen.subTens])(), A2('add2Regroup'), S2('sub2Regroup'), storyQ(pick(['add', 'sub']), t),
       A2('addBigBoth'), S2('subBigBoth'), A2('addBigThree'), S2('subBigZero')] }
 ];
@@ -426,17 +582,31 @@ function starsFor(my, rival, firstTry, n) {
 const $ = id => document.getElementById(id);
 const KITS = ['#e5484d', '#2f6fed', '#ffd23f', '#111827', '#ff7ab6', '#f8f6ea'];
 const KEY = 'goal-math-league-v1';
+const WIN = [523, 659, 784, 1047], LOW = [220, 165];
+const KIND = {
+  shootout: { tag: 'Shootout', next: 'Next shot', how: 'Tap the right answer to shoot.' },
+  keeper: { tag: 'You are the goalie', next: 'Next shot', how: 'You are the goalie! Tap the right answer to dive and save.' },
+  dribble: { tag: 'Dribble', next: 'Next attack', how: 'Tap the right answer to get past each defender, then shoot.' },
+  long: { tag: 'Add in columns', next: 'Next problem', how: 'Work it out in columns. Start with the ones.' }
+};
 let save = { team: 'JJ United', kit: KITS[0], stars: {}, openAll: false, sound: true };
 let M = null, busy = false, audio = null;
 
 function loadSave(hotData) {
   try { const raw = localStorage.getItem(KEY); if (raw) save = Object.assign(save, JSON.parse(raw)); } catch (e) {}
   if (hotData && hotData.team) save = Object.assign(save, hotData);
+  // stars used to be stored by match number; they are now stored by match id
+  const old = save.stars || {};
+  if (Object.keys(old).some(k => /^\d$/.test(k))) {
+    const s = {}; for (const k in old) s[/^\d$/.test(k) ? 's' + (Number(k) + 1) : k] = old[k];
+    save.stars = s; store();
+  }
 }
 function store() { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) {} }
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 function teamName() { return (save.team || '').trim() || 'My Team'; }
 function show(id) { for (const s of ['home', 'match', 'result']) $(s).hidden = s !== id; window.scrollTo(0, 0); }
+function later(ms, fn) { const m = M; setTimeout(() => { if (M === m) fn(); }, ms); }
 
 /* ----- sound ----- */
 function tone(freqs, dur, type, delay) {
@@ -467,6 +637,8 @@ const stadium = (() => {
   const reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
   let now = 0, last = 0, raf = 0, running = false, tweens = [], confetti = [], ripple = null;
   const ball = {}, kp = {}, st = {}, fx = { exK: 0, exR: 0, shake: 0, flash: 0 };
+  let role = 'shoot', scene = 'goal';
+  const pl = {}, gk = {}, fb = {}, defs = [{}, {}], FY = 318, DX = [235, 385];
   const fans = [];
   for (let r = 0; r < 8; r++) for (let i = 0; i < 44; i++) {
     const x = 6 + i * 12.8 + (r % 2 ? 6 : 0) + (Math.random() * 3 - 1.5);
@@ -494,22 +666,70 @@ const stadium = (() => {
     if (kz === 1) tw(kp, { c: 1 }, 300, easeOut, 400);
     else tw(kp, { x: ZCX[kz] + (kz === 0 ? 60 : -60), lift: 10, rot: kz === 0 ? -1.35 : 1.35, arm: 1 }, 430, easeOut, 340);
   }
-  function goal(zi) {
+  function shootWide(kz) {
+    tw(st, { x: 240, y: 416 }, 240, easeIO);
+    tw(st, { kick: 1 }, 110, easeOut, 190); tw(st, { kick: 0 }, 260, easeOut, 330);
+    tw(ball, { x: 300, y: 62, r: 6, g: GY + 4 }, 560, easeOut, 270); tw(ball, { vs: 18 }, 40, lin, 270);
+    kp.side = kz;
+    if (kz === 1) tw(kp, { c: 1 }, 300, easeOut, 400);
+    else tw(kp, { x: ZCX[kz] + (kz === 0 ? 60 : -60), lift: 10, rot: kz === 0 ? -1.35 : 1.35, arm: 1 }, 430, easeOut, 340);
+    st.mood = 'sad';
+  }
+  function celebrate(small) {
+    fx.exK = 1; if (!reduce && !small) { fx.shake = 1; fx.flash = 1; }
+    const cols = [save.kit, GOLD, CHALK], n = reduce ? 24 : small ? 60 : 120;
+    for (let i = 0; i < n; i++) confetti.push({ x: Math.random() * W, y: -10 - Math.random() * 140, vx: (Math.random() - .5) * 60, vy: 90 + Math.random() * 140, rot: Math.random() * 6, vr: (Math.random() - .5) * 12, w: 5 + Math.random() * 5, h: 3 + Math.random() * 3, c: pick(cols) });
+  }
+  // good = the result helps the home team
+  function goal(zi, good) {
     ripple = { x: ball.x, y: ball.y, t0: performance.now() };
-    fx.exK = 1; if (!reduce) { fx.shake = 1; fx.flash = 1; }
+    if (good) celebrate(); else fx.exR = 1;
     tw(ball, { y: GY - 9, x: ball.x + (ZCX[zi] - 280) * 0.08 }, 460, bounce); tw(ball, { vs: 1 }, 460, lin);
     if (kp.side !== 1) tw(kp, { lift: 4 }, 260, easeIn);
     st.mood = 'joy'; tw(st, { arms: 1 }, 240, easeOut);
-    const cols = [save.kit, GOLD, CHALK], n = reduce ? 24 : 120;
-    for (let i = 0; i < n; i++) confetti.push({ x: Math.random() * W, y: -10 - Math.random() * 140, vx: (Math.random() - .5) * 60, vy: 90 + Math.random() * 140, rot: Math.random() * 6, vr: (Math.random() - .5) * 12, w: 5 + Math.random() * 5, h: 3 + Math.random() * 3, c: pick(cols) });
   }
-  function saved(zi) {
-    fx.exR = 1;
+  function saved(zi, good) {
+    if (good) celebrate(true); else fx.exR = 1;
     tw(ball, { x: ZCX[zi] + (zi === 0 ? -66 : zi === 2 ? 66 : 48), y: 306, r: 11, g: 318 }, 520, easeOut);
     tw(ball, { h: 2 }, 520, lin); tw(ball, { vs: 3 }, 520, lin);
     if (kp.side !== 1) tw(kp, { lift: 4 }, 300, easeIn, 120);
     st.mood = 'sad';
   }
+
+  /* ----- dribble scene: run past two defenders, then shoot ----- */
+  function setup(kind) { scene = kind === 'dribble' ? 'field' : 'goal'; role = kind === 'keeper' ? 'save' : 'shoot'; confetti = []; reset(); fieldReset(); }
+  function fieldReset() {
+    tweens = [];
+    Object.assign(pl, { x: 70, y: FY, run: 0, mood: 'idle' });
+    defs.forEach((d, i) => Object.assign(d, { x: DX[i], off: 0, rot: 0 }));
+    Object.assign(gk, { y: FY + 4, rot: 0 });
+    Object.assign(fb, { x: 85, y: FY - 3, free: 0, spin: 0 });
+  }
+  function fieldBack(i) {
+    tweens = [];
+    Object.assign(pl, { x: i ? DX[0] + 60 : 70, y: FY, run: 0, mood: 'idle' });
+    Object.assign(defs[i], { x: DX[i], off: 0, rot: 0 }); fb.free = 0;
+  }
+  function fieldBeat(i) {
+    const d = defs[i]; pl.run = 1; pl.mood = 'idle';
+    tw(pl, { x: d.x + 60 }, 620, lin);
+    tw(pl, { y: FY + 44 }, 240, easeOut, 120); tw(pl, { y: FY }, 240, easeIO, 400);
+    tw(d, { off: -30, rot: -1.25 }, 300, easeOut, 230);
+    if (i === 0) { tw(pl, { run: 0 }, 1, lin, 640); return; }
+    tw(pl, { x: 462 }, 260, lin, 620); tw(pl, { run: 0 }, 1, lin, 900);
+    const up = Math.random() < .5;
+    tw(fb, { free: 1 }, 1, lin, 900); tw(fb, { x: 553, y: up ? FY - 24 : FY + 22 }, 360, easeOut, 915);
+    tw(gk, { y: up ? FY + 30 : FY - 20, rot: up ? 1.1 : -1.1 }, 300, easeOut, 960);
+  }
+  function fieldTackle(i) {
+    const d = defs[i]; pl.run = 1;
+    tw(pl, { x: d.x - 36 }, 260, lin); tw(pl, { run: 0 }, 1, lin, 270);
+    tw(d, { x: d.x - 14 }, 160, easeOut, 180);
+    tw(fb, { free: 1 }, 1, lin, 270); tw(fb, { x: d.x + 46, y: FY - 30 }, 420, easeOut, 285);
+    pl.mood = 'sad';
+  }
+  function fieldGoal() { celebrate(); pl.mood = 'joy'; }
+  function fieldLost() { fx.exR = 1; }
 
   /* ----- drawing helpers ----- */
   function line(x1, y1, x2, y2, w, col) { c.strokeStyle = col; c.lineWidth = w; c.lineCap = 'round'; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); }
@@ -582,7 +802,7 @@ const stadium = (() => {
     c.strokeStyle = '#ffffff'; c.lineWidth = 7; c.stroke();
   }
   function drawKeeper() {
-    const riv = rivalColor(), idle = 1 - kp.arm, bob = Math.sin(now / 160) * 1.6 * idle * (1 - kp.c) * (reduce ? 0 : 1);
+    const riv = role === 'save' ? save.kit : rivalColor(), idle = 1 - kp.arm, bob = Math.sin(now / 160) * 1.6 * idle * (1 - kp.c) * (reduce ? 0 : 1);
     c.beginPath(); c.ellipse(kp.x, GY + 4, 26 - kp.lift * 0.3, 5, 0, 0, 6.2832); c.fillStyle = 'rgba(0,0,0,.28)'; c.fill();
     c.save(); c.translate(kp.x + Math.sin(now / 420) * 5 * idle * (1 - kp.c) * (reduce ? 0 : 1), GY - kp.lift); c.scale(K, K);
     c.translate(0, -38); c.rotate(kp.rot); c.translate(0, 38 + bob);
@@ -616,7 +836,7 @@ const stadium = (() => {
     c.restore();
   }
   function drawStriker() {
-    const kit = save.kit, light = isLight(kit), skin = '#d9a273';
+    const kit = role === 'save' ? rivalColor() : save.kit, light = isLight(kit), skin = '#d9a273';
     const jump = st.mood === 'joy' && !reduce ? Math.abs(Math.sin(now / 150)) * 12 : 0;
     c.beginPath(); c.ellipse(st.x, st.y + 2, 30, 6, 0, 0, 6.2832); c.fillStyle = 'rgba(0,0,0,.28)'; c.fill();
     c.save(); c.translate(st.x, st.y - jump); c.scale(1.3, 1.3);
@@ -631,6 +851,47 @@ const stadium = (() => {
     const hd = st.mood === 'sad' ? 3 : 0;
     c.fillStyle = skin; c.fillRect(-3.5, -89 + hd, 7, 6);
     circ(0, -96 + hd, 10.5, '#3b2416', INK, 1.5);
+    c.restore();
+  }
+  function fig(x, y, s, col, o) {
+    c.beginPath(); c.ellipse(x, y + 2, 14 * s, 3.5 * s, 0, 0, 6.2832); c.fillStyle = 'rgba(0,0,0,.28)'; c.fill();
+    c.save(); c.translate(x, y); c.scale(s, s);
+    if (o.rot) { c.translate(0, -20); c.rotate(o.rot); c.translate(0, 20); }
+    const ph = o.run ? Math.sin(now / 70) : 0, arms = o.arms || 0;
+    line(-4, -20, -5 + ph * 7, -1, 6, INK); line(4, -20, 5 - ph * 7, -1, 6, INK);
+    rr(-9, -27, 18, 9, 3, o.shorts || CHALK);
+    const ay = lerp(-22, -62, arms), ax = lerp(13, 15, arms);
+    line(-9, -40, -ax, ay + ph * 3, 5, col); line(9, -40, ax, ay - ph * 3, 5, col);
+    rr(-10, -46, 20, 21, 5, col, INK, 1.5);
+    circ(0, -53, 7.5, o.skin || '#d9a273', INK, 1.5);
+    c.beginPath(); c.arc(0, -55, 7.5, Math.PI * 1.05, Math.PI * 1.95); c.strokeStyle = '#3b2416'; c.lineWidth = 3.5; c.stroke();
+    if (o.gloves) { circ(-ax, ay, 4.5, GOLD, INK, 1.5); circ(ax, ay, 4.5, GOLD, INK, 1.5); }
+    c.restore();
+  }
+  function drawField() {
+    drawStands();
+    for (let i = 0; i < 7; i++) { c.fillStyle = i % 2 ? '#1f8a45' : '#25994d'; c.fillRect(i * 80, 190, 80, 210); }
+    const sh = c.createRadialGradient(280, 250, 20, 280, 250, 340); sh.addColorStop(0, 'rgba(255,255,220,.13)'); sh.addColorStop(1, 'rgba(0,20,10,.22)');
+    c.fillStyle = sh; c.fillRect(0, 190, W, 210);
+    c.strokeStyle = 'rgba(255,255,255,.88)'; c.lineWidth = 3; c.lineJoin = 'round'; c.lineCap = 'round'; c.beginPath();
+    c.moveTo(0, 214); c.lineTo(548, 214); c.lineTo(548, 392); c.lineTo(0, 392);
+    c.moveTo(548, 244); c.lineTo(440, 244); c.lineTo(440, 384); c.lineTo(548, 384);
+    c.moveTo(548, 278); c.lineTo(506, 278); c.lineTo(506, 358); c.lineTo(548, 358); c.stroke();
+    c.fillStyle = 'rgba(4,16,10,.45)'; c.fillRect(548, 282, 12, 72);
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 1; c.beginPath();
+    for (let y = 288; y < 354; y += 6) { c.moveTo(548, y); c.lineTo(560, y); } c.moveTo(554, 282); c.lineTo(554, 354); c.stroke();
+    c.strokeStyle = '#fff'; c.lineWidth = 4; c.beginPath(); c.moveTo(548, 282); c.lineTo(560, 282); c.moveTo(548, 354); c.lineTo(560, 354); c.stroke();
+    const kit = save.kit, riv = rivalColor(), sway = reduce ? 0 : 1;
+    fig(528, gk.y, 1.3, riv, { rot: gk.rot, arms: .35, gloves: true, shorts: INK });
+    defs.forEach((d, i) => fig(d.x, FY + d.off + (d.rot ? 0 : Math.sin(now / 320 + i * 2) * 5 * sway), 1.5, riv, { rot: d.rot, shorts: INK }));
+    if (!fb.free) { fb.x = pl.x + 16; fb.y = pl.y - 3; fb.spin += pl.run * .3; } else fb.spin += .25;
+    const jump = pl.mood === 'joy' && !reduce ? Math.abs(Math.sin(now / 150)) * 10 : 0;
+    fig(pl.x, pl.y - jump, 1.5, kit, { run: pl.run > .5, arms: pl.mood === 'joy' ? 1 : 0, shorts: isLight(kit) ? '#0d1c2e' : CHALK });
+    c.beginPath(); c.ellipse(fb.x, fb.y + 7, 7, 2.4, 0, 0, 6.2832); c.fillStyle = 'rgba(0,0,0,.3)'; c.fill();
+    circ(fb.x, fb.y, 7, '#fff', INK, 1.6);
+    c.save(); c.translate(fb.x, fb.y); c.rotate(fb.spin); c.fillStyle = INK; c.beginPath();
+    for (let i = 0; i < 5; i++) { const a = -1.5708 + i * 1.2566; c[i ? 'lineTo' : 'moveTo'](Math.cos(a) * 3, Math.sin(a) * 3); } c.closePath(); c.fill();
+    for (let i = 0; i < 5; i++) { const a = -1.5708 + i * 1.2566; c.fillRect(Math.cos(a) * 5.6 - 1.2, Math.sin(a) * 5.6 - 1.2, 2.4, 2.4); }
     c.restore();
   }
   function drawConfetti(dt) {
@@ -653,58 +914,144 @@ const stadium = (() => {
     c.setTransform(2, 0, 0, 2, 0, 0); c.clearRect(0, 0, W, H);
     c.save();
     if (fx.shake > 0) c.translate((Math.random() - .5) * 9 * fx.shake, (Math.random() - .5) * 9 * fx.shake);
-    drawStands(); drawPitch(); drawGoal(); drawKeeper(); drawBall(); drawStriker(); drawConfetti(dt);
+    if (scene === 'field') drawField(); else { drawStands(); drawPitch(); drawGoal(); drawKeeper(); drawBall(); drawStriker(); }
+    drawConfetti(dt);
     c.restore();
     if (fx.flash > 0) { c.fillStyle = `rgba(255,255,255,${fx.flash * 0.22})`; c.fillRect(0, 0, W, H); }
     if (running) raf = requestAnimationFrame(frame);
   }
   function start() { if (!running) { running = true; last = 0; raf = requestAnimationFrame(frame); } }
   function stop() { running = false; cancelAnimationFrame(raf); confetti = []; fx.exK = fx.exR = fx.shake = fx.flash = 0; }
-  reset();
-  return { start, stop, reset, shoot, goal, saved };
+  reset(); fieldReset();
+  return { start, stop, setup, reset, shoot, shootWide, goal, saved, fieldReset, fieldBack, fieldBeat, fieldTackle, fieldGoal, fieldLost };
 })();
 
-/* ----- home ----- */
+
+/* ================= HELPER TOOLS ================= */
+const tools = (() => {
+  const NAMES = [['hundred', 'hundreds'], ['ten', 'tens'], ['one', 'ones']], VAL = [100, 10, 1], CAP = 20;
+  let q = null, mat = [0, 0, 0], open = null, hi = false, marks = new Set(), pctx = null, drawing = false, lx = 0, ly = 0;
+
+  function setQ(nq) { q = nq; mat = [0, 0, 0]; marks.clear(); clearPad(); render(); }
+  function toggle(name) {
+    open = open === name ? null : name;
+    for (const n of ['blocks', 'chart', 'pad']) { $('panel-' + n).hidden = n !== open; $('tool-' + n).setAttribute('aria-pressed', String(n === open)); }
+    if (open === 'pad') sizePad();
+    render();
+  }
+  function render() { if (open === 'blocks') renderMat(); if (open === 'chart') renderChart(); }
+  function renderMat() {
+    $('mat').innerHTML = mat.map((n, i) => `<div class="mat-col"><div class="mat-head">${NAMES[i][1]}</div>
+      <div class="chips">${`<span class="chip c${i}">${VAL[i]}</span>`.repeat(n)}</div><div class="mat-count">${n}</div>
+      <div class="mat-btns"><button type="button" class="mini" id="mat-dec-${i}" data-act="dec" data-i="${i}" ${n ? '' : 'disabled'} aria-label="Take away one ${NAMES[i][0]}">−</button>
+      <button type="button" class="mini" id="mat-inc-${i}" data-act="inc" data-i="${i}" ${n < CAP ? '' : 'disabled'} aria-label="Add one ${NAMES[i][0]}">+</button></div></div>`).join('');
+    $('bundle-ones').disabled = !(mat[2] >= 10 && mat[1] < CAP);
+    $('break-ten').disabled = !(mat[1] >= 1 && mat[2] <= CAP - 10);
+    $('bundle-tens').disabled = !(mat[1] >= 10 && mat[0] < CAP);
+    $('break-hundred').disabled = !(mat[0] >= 1 && mat[1] <= CAP - 10);
+    const nums = q && !q.story ? q.nums : null, add = !!(nums && q.op === '+' && nums.length > 1);
+    $('mat-show').hidden = !nums; if (nums) $('mat-show').textContent = 'Show ' + nums[0];
+    $('mat-add').hidden = !add; if (add) $('mat-add').textContent = 'Add ' + nums[1];
+  }
+  function matAct(act, i) {
+    if (act === 'inc' && mat[i] < CAP) mat[i]++;
+    else if (act === 'dec' && mat[i] > 0) mat[i]--;
+    else if (act === 'bundle-ones') { mat[2] -= 10; mat[1]++; }
+    else if (act === 'break-ten') { mat[1]--; mat[2] += 10; }
+    else if (act === 'bundle-tens') { mat[1] -= 10; mat[0]++; }
+    else if (act === 'break-hundred') { mat[0]--; mat[1] += 10; }
+    else if (act === 'clear') mat = [0, 0, 0];
+    else if (act === 'show') mat = digits(q.nums[0]);
+    else if (act === 'add') mat = mat.map((n, k) => Math.min(CAP, n + digits(q.nums[1])[k]));
+    renderMat();
+  }
+  function renderChart() {
+    const base = hi ? 100 : 0; let h = '';
+    for (let n = base + 1; n <= base + 100; n++) h += `<button type="button" class="cell${marks.has(n) ? ' on' : ''}" id="cell-${n}" data-n="${n}">${n}</button>`;
+    $('chart').innerHTML = h; $('chart-range').textContent = hi ? 'Show 1 to 100' : 'Show 101 to 200';
+  }
+  function sizePad() {
+    const cv = $('pad'), r = cv.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
+    if (r.width && cv.width !== Math.round(r.width * d)) { cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d); }
+    pctx = cv.getContext('2d'); pctx.setTransform(d, 0, 0, d, 0, 0);
+    pctx.lineWidth = 3.5; pctx.lineCap = 'round'; pctx.lineJoin = 'round'; pctx.strokeStyle = '#10261b';
+  }
+  function clearPad() { const cv = $('pad'), x = cv.getContext('2d'); x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, cv.width, cv.height); x.restore(); }
+  function pos(e) { const r = $('pad').getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  function init() {
+    for (const n of ['blocks', 'chart', 'pad']) $('tool-' + n).addEventListener('click', () => toggle(n));
+    $('panel-blocks').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && !b.disabled) matAct(b.dataset.act, Number(b.dataset.i)); });
+    $('chart').addEventListener('click', e => { const b = e.target.closest('.cell'); if (!b) return; const n = Number(b.dataset.n); if (marks.has(n)) marks.delete(n); else marks.add(n); b.classList.toggle('on'); });
+    $('chart-range').addEventListener('click', () => { hi = !hi; renderChart(); });
+    $('chart-clear').addEventListener('click', () => { marks.clear(); renderChart(); });
+    $('pad-clear').addEventListener('click', clearPad);
+    const cv = $('pad');
+    cv.addEventListener('pointerdown', e => { if (!pctx) sizePad(); drawing = true; [lx, ly] = pos(e); try { cv.setPointerCapture(e.pointerId); } catch (err) {} pctx.beginPath(); pctx.arc(lx, ly, 1.6, 0, 6.2832); pctx.fillStyle = '#10261b'; pctx.fill(); e.preventDefault(); });
+    cv.addEventListener('pointermove', e => { if (!drawing) return; const [x, y] = pos(e); pctx.beginPath(); pctx.moveTo(lx, ly); pctx.lineTo(x, y); pctx.stroke(); lx = x; ly = y; });
+    for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) cv.addEventListener(ev, () => { drawing = false; });
+  }
+  return { setQ, init };
+})();
+
+/* ================= HOME ================= */
+function isOpen(i) {
+  const L = LEVELS[i];
+  if (L.group === 'training' || save.openAll) return true;
+  const prev = LEVELS[i - 1];
+  return prev.group !== 'season' || (save.stars[prev.id] || 0) > 0;
+}
 function renderHome() {
   $('team-name').value = save.team;
   document.documentElement.style.setProperty('--kit', save.kit);
   $('kits').innerHTML = KITS.map((c, i) =>
     `<span><input type="radio" name="kit" id="kit-${i}" value="${c}" ${c === save.kit ? 'checked' : ''}><label for="kit-${i}" style="--c:${c}" aria-label="Color ${i + 1}"></label></span>`).join('');
-  $('fixtures').innerHTML = LEVELS.map((L, i) => {
-    const st = save.stars[i] || 0;
-    const open = i === 0 || save.openAll || (save.stars[i - 1] || 0) > 0;
+  const html = { training: '', season: '' }; let tn = 0, sn = 0;
+  LEVELS.forEach((L, i) => {
+    const st = save.stars[L.id] || 0, open = isOpen(i), tr = L.group === 'training';
+    const label = tr ? 'ABCD'[tn++] : ++sn;
     const stars = '<b>' + '★'.repeat(st) + '</b>' + '★'.repeat(3 - st);
-    return `<li><button class="fixture" type="button" id="fixture-${i}" data-level="${i}" ${open ? '' : 'disabled'}>
-      <span class="num">${i + 1}</span>
-      <span><span class="name">${esc(L.name)}</span><br><span class="skill">${open ? esc(L.skill) + ' · vs ' + esc(L.rival) : 'Win match ' + i + ' to open'}</span></span>
+    html[L.group] += `<li><button class="fixture" type="button" id="fixture-${L.id}" data-level="${i}" ${open ? '' : 'disabled'}>
+      <span class="num${tr ? ' t' : ''}">${label}</span>
+      <span><span class="name">${esc(L.name)}</span><br><span class="skill">${open ? esc(L.skill) : 'Win match ' + (sn - 1) + ' to open'}</span><br><span class="tag">${KIND[L.kind].tag}</span></span>
       <span class="stars" aria-label="${st} of 3 stars">${stars}</span></button></li>`;
-  }).join('');
+  });
+  $('fixtures-training').innerHTML = html.training; $('fixtures-season').innerHTML = html.season;
   $('unlock-all').hidden = save.openAll;
 }
 
-/* ----- match ----- */
+/* ================= MATCH ================= */
 function startMatch(level) {
   const L = LEVELS[level];
-  M = { level, qs: L.build(teamName()), i: 0, my: 0, rival: 0, firstTry: 0, tries: 0, marks: [], tricky: [] };
-  document.documentElement.style.setProperty('--rival', L.color);
+  M = { level, kind: L.kind, qs: L.build(teamName()), i: 0, my: 0, rival: 0, firstTry: 0, tries: 0, marks: [], tricky: [], jump: null, nextI: 0 };
   $('home-name').textContent = teamName(); $('away-name').textContent = L.rival;
   $('sw-home').style.background = save.kit; $('sw-away').style.background = L.color;
   $('sound').textContent = save.sound ? 'Sound on' : 'Sound off';
   $('sound').setAttribute('aria-pressed', String(save.sound));
+  $('howto').textContent = KIND[L.kind].how;
+  $('zones').hidden = !(L.kind === 'shootout' || L.kind === 'keeper');
+  $('answers').hidden = L.kind !== 'dribble';
+  $('sheet').hidden = L.kind !== 'long';
+  stadium.setup(L.kind);
   show('match'); stadium.start(); renderQuestion();
 }
-function resetScene() { stadium.reset(); $('banner').hidden = true; }
-function renderScore() {
+function btns(prefix) { return [0, 1, 2].map(i => $(prefix + i)); }
+function fillButtons(prefix, q, verb) {
+  q.opts.forEach((v, i) => { const z = $(prefix + i); z.disabled = false; z.className = z.dataset.base; z.dataset.v = v; z.firstElementChild.textContent = v; z.setAttribute('aria-label', verb + v); });
+}
+function renderScore(showNow) {
   $('score').textContent = `${M.my} : ${M.rival}`;
-  $('dots').innerHTML = M.qs.map((_, i) => `<span class="dot ${M.marks[i] || (i === M.i ? 'now' : '')}"></span>`).join('');
+  $('dots').innerHTML = M.qs.map((_, i) => `<span class="dot ${M.marks[i] || (showNow && i === M.i ? 'now' : '')}"></span>`).join('');
 }
 function renderQuestion() {
-  const q = M.qs[M.i]; M.tries = 0; busy = false;
-  renderScore(); resetScene();
+  const q = M.qs[M.i]; M.tries = 0; M.jump = null; busy = false;
+  renderScore(true); $('banner').hidden = true;
   $('story').hidden = !q.text; $('story').textContent = q.text || '';
   $('equation').innerHTML = q.text ? '<span class="q">?</span>' : esc(q.display).replace('?', '<span class="q">?</span>');
-  q.opts.forEach((v, i) => { const z = $('zone-' + i); z.disabled = false; z.className = 'zone'; z.dataset.v = v; z.firstElementChild.textContent = v; z.setAttribute('aria-label', 'Shoot at ' + v); });
   $('coach').hidden = true; $('next').hidden = true;
+  if (M.kind === 'dribble') { if (M.i % 2 === 0) stadium.fieldReset(); fillButtons('ans-', q, 'Answer '); }
+  else if (M.kind === 'long') { stadium.reset(); buildSheet(q); }
+  else { stadium.reset(); fillButtons('zone-', q, M.kind === 'keeper' ? 'Dive to ' : 'Shoot at '); }
+  tools.setQ(q);
 }
 function vformHTML(v, full, ans) {
   if (!v) return '';
@@ -724,59 +1071,139 @@ function coach(q, full) {
   $('coach-steps').innerHTML = steps.map((s, i) => `<li class="${full && i === steps.length - 1 ? 'sum' : ''}">${esc(s)}</li>`).join('');
   $('coach').hidden = false;
 }
-function banner(text, cls) { const b = $('banner'); b.textContent = text; b.className = 'banner ' + cls; b.hidden = false; $('live').textContent = text; }
-
-function shoot(zi) {
-  if (busy || !M) return;
-  const m = M, q = M.qs[M.i], z = $('zone-' + zi), val = Number(z.dataset.v), right = val === q.ans;
-  busy = true;
-  for (let i = 0; i < 3; i++) $('zone-' + i).disabled = true;
-  $('banner').hidden = true;
-  tone([150], 0.1, 'square', 0.26);
-  const kz = right ? pick([0, 1, 2].filter(i => i !== zi)) : zi;
-  stadium.shoot(zi, kz);
-
-  setTimeout(() => {
-    if (M !== m) return;
-    if (right) {
-      stadium.goal(zi);
-      M.my++; if (M.tries === 0) M.firstTry++;
-      M.marks[M.i] = M.tries === 0 ? 'goal' : 'rebound';
-      z.classList.add('right');
-      banner(M.tries === 0 ? 'Goal!' : 'Rebound goal!', M.tries === 0 ? 'goal' : 'goal long'); tone([523, 659, 784, 1047], 0.16);
-      finishShot();
-    } else {
-      stadium.saved(zi);
-      banner('Saved!', 'save'); tone([220, 165], 0.2, 'sawtooth');
-      z.classList.add('out');
-      if (M.tries === 0) {
-        M.tries = 1; M.tricky.push(q.solved); coach(q, false);
-        setTimeout(() => { if (M !== m) return; resetScene(); for (let i = 0; i < 3; i++) { const zz = $('zone-' + i); zz.disabled = zz.classList.contains('out'); } busy = false; }, 1500);
-      } else {
-        M.rival++; M.marks[M.i] = 'miss';
-        for (let i = 0; i < 3; i++) if (Number($('zone-' + i).dataset.v) === q.ans) $('zone-' + i).classList.add('right');
-        coach(q, true); finishShot();
-      }
-    }
-  }, 810);
+function banner(text, cls) { const b = $('banner'); b.textContent = text; b.className = 'banner ' + cls + (text.length > 7 ? ' long' : ''); b.hidden = false; $('live').textContent = text; }
+function credit() { if (M.tries === 0) M.firstTry++; M.marks[M.i] = M.tries === 0 ? 'goal' : 'rebound'; }
+function showRight(prefix, q) { btns(prefix).forEach(b => { if (Number(b.dataset.v) === q.ans) b.classList.add('right'); }); }
+function firstMiss(q, prefix, resetFn) {
+  M.tries = 1; M.tricky.push(q.solved); coach(q, false);
+  later(1500, () => { resetFn(); $('banner').hidden = true; btns(prefix).forEach(b => { b.disabled = b.classList.contains('out'); }); busy = false; });
 }
 function finishShot() {
-  renderScoreKeepNow();
-  const last = M.i === M.qs.length - 1;
-  $('next').textContent = last ? 'Full time!' : 'Next shot';
+  renderScore(false);
+  M.nextI = M.jump === null ? M.i + 1 : M.jump;
+  $('next').textContent = M.nextI >= M.qs.length ? 'Full time!' : KIND[M.kind].next;
   $('next').hidden = false;
   if (M.marks[M.i] !== 'miss') $('equation').innerHTML = esc(M.qs[M.i].solved);
 }
-function renderScoreKeepNow() {
-  $('score').textContent = `${M.my} : ${M.rival}`;
-  $('dots').innerHTML = M.qs.map((_, i) => `<span class="dot ${M.marks[i] || ''}"></span>`).join('');
+function answer(prefix, i) {
+  if (busy || !M) return;
+  const b = $(prefix + i), q = M.qs[M.i], right = Number(b.dataset.v) === q.ans;
+  busy = true; btns(prefix).forEach(x => { x.disabled = true; }); $('banner').hidden = true;
+  if (M.kind === 'shootout') shoot(i, b, q, right);
+  else if (M.kind === 'keeper') dive(i, b, q, right);
+  else dribble(i, b, q, right);
 }
 
-/* ----- result ----- */
+/* ----- shootout: you take the penalty ----- */
+function shoot(zi, z, q, right) {
+  tone([150], 0.1, 'square', 0.26);
+  stadium.shoot(zi, right ? pick([0, 1, 2].filter(i => i !== zi)) : zi);
+  later(810, () => {
+    if (right) {
+      stadium.goal(zi, true); M.my++; credit(); z.classList.add('right');
+      banner(M.tries === 0 ? 'Goal!' : 'Rebound goal!', 'goal'); tone(WIN, 0.16); finishShot();
+    } else {
+      stadium.saved(zi, false); banner('Saved!', 'save'); tone(LOW, 0.2, 'sawtooth'); z.classList.add('out');
+      if (M.tries === 0) firstMiss(q, 'zone-', () => stadium.reset());
+      else { M.rival++; M.marks[M.i] = 'miss'; showRight('zone-', q); coach(q, true); finishShot(); }
+    }
+  });
+}
+
+/* ----- beat the keeper: you are the goalie ----- */
+function dive(zi, z, q, right) {
+  const cz = [0, 1, 2].find(i => Number($('zone-' + i).dataset.v) === q.ans);
+  tone([150], 0.1, 'square', 0.26);
+  if (right) stadium.shoot(zi, zi); else if (M.tries === 0) stadium.shootWide(zi); else stadium.shoot(cz, zi);
+  later(810, () => {
+    if (right) {
+      stadium.saved(zi, true); M.my++; credit(); z.classList.add('right');
+      banner(M.tries === 0 ? 'Great save!' : 'Save!', 'goal'); tone(WIN, 0.16); finishShot();
+    } else if (M.tries === 0) {
+      banner('Wrong way! Retake', 'save'); tone(LOW, 0.2, 'sawtooth'); z.classList.add('out');
+      firstMiss(q, 'zone-', () => stadium.reset());
+    } else {
+      stadium.goal(cz, false); M.rival++; M.marks[M.i] = 'miss'; z.classList.add('out'); showRight('zone-', q);
+      banner('They score!', 'save'); tone(LOW, 0.2, 'sawtooth'); coach(q, true); finishShot();
+    }
+  });
+}
+
+/* ----- dribble: two defenders, then a shot ----- */
+function dribble(bi, b, q, right) {
+  const pos = M.i % 2;
+  if (right) {
+    stadium.fieldBeat(pos); tone([440, 660], 0.08);
+    later(pos ? 1300 : 700, () => {
+      credit(); b.classList.add('right');
+      if (pos) { stadium.fieldGoal(); M.my++; banner('Goal!', 'goal'); tone(WIN, 0.16); finishShot(); }
+      else { M.i++; renderQuestion(); }
+    });
+  } else {
+    stadium.fieldTackle(pos);
+    later(560, () => {
+      tone(LOW, 0.2, 'sawtooth'); b.classList.add('out');
+      if (M.tries === 0) { banner('Tackled!', 'save'); firstMiss(q, 'ans-', () => stadium.fieldBack(pos)); }
+      else {
+        stadium.fieldLost(); M.rival++; M.marks[M.i] = 'miss'; if (!pos) M.marks[M.i + 1] = 'skip';
+        showRight('ans-', q); banner('They win the ball!', 'save'); coach(q, true);
+        M.jump = (Math.floor(M.i / 2) + 1) * 2; finishShot();
+      }
+    });
+  }
+}
+
+/* ----- adding in columns ----- */
+function buildSheet(q) {
+  M.steps = longSteps(q); M.si = 0; M.stepWrong = 0; M.revealed = false; M.slips = 0;
+  const pad = n => { const s = String(n).split(''); while (s.length < 3) s.unshift(''); return s; };
+  const has = b => M.steps.some(s => s.box === b), cell = t => `<span>${t}</span>`;
+  const box = (b, small) => has(b) ? `<span class="box${small ? ' small' : ''}" id="box-${b}"></span>` : '<span></span>';
+  $('work').innerHTML = cell('') + pad(q.nums[0]).map(cell).join('') + cell('+') + pad(q.nums[1]).map(cell).join('')
+    + '<span class="rule"></span><span></span><span></span>' + box('c1', true) + '<span></span>'
+    + '<span></span>' + box('h') + box('t') + box('o');
+  setActive();
+}
+function setActive() {
+  const s = M.steps[M.si];
+  document.querySelectorAll('#work .box').forEach(b => b.classList.remove('active'));
+  $('box-' + s.box).classList.add('active'); $('sheet-prompt').textContent = s.prompt;
+}
+function keyTap(d) {
+  if (busy || !M || M.kind !== 'long' || !M.steps || M.si >= M.steps.length) return;
+  const s = M.steps[M.si], box = $('box-' + s.box);
+  if (d === s.want) { box.textContent = d; box.classList.add('ok'); tone([660], 0.08); nextStep(); return; }
+  M.slips++; M.stepWrong++; tone([180], 0.12, 'sawtooth');
+  box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
+  if (M.stepWrong === 1) $('sheet-prompt').textContent = 'Not quite. ' + s.hint;
+  else { box.textContent = s.want; box.classList.add('shown'); M.revealed = true; nextStep(); }
+}
+function nextStep() {
+  M.si++; M.stepWrong = 0;
+  document.querySelectorAll('#work .box').forEach(b => b.classList.remove('active'));
+  if (M.si < M.steps.length) { setActive(); return; }
+  const q = M.qs[M.i], zi = rnd(0, 2), miss = M.revealed;
+  busy = true; $('sheet-prompt').textContent = q.solved;
+  try { $('scene').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+  tone([150], 0.1, 'square', 0.26);
+  stadium.shoot(zi, miss ? zi : pick([0, 1, 2].filter(i => i !== zi)));
+  later(810, () => {
+    if (miss) {
+      stadium.saved(zi, false); M.rival++; M.marks[M.i] = 'miss'; M.tricky.push(q.solved);
+      banner('Saved!', 'save'); tone(LOW, 0.2, 'sawtooth'); coach(q, true);
+    } else {
+      stadium.goal(zi, true); M.my++; M.tries = M.slips ? 1 : 0; credit(); if (M.slips) M.tricky.push(q.solved);
+      banner(M.slips ? 'Rebound goal!' : 'Goal!', 'goal'); tone(WIN, 0.16);
+    }
+    finishShot();
+  });
+}
+
+/* ================= RESULT ================= */
 function endMatch() {
   const n = M.qs.length, L = LEVELS[M.level];
   const st = starsFor(M.my, M.rival, M.firstTry, n);
-  if (st > (save.stars[M.level] || 0)) { save.stars[M.level] = st; store(); }
+  if (st > (save.stars[L.id] || 0)) { save.stars[L.id] = st; store(); }
   const win = M.my > M.rival, draw = M.my === M.rival, final = M.level === LEVELS.length - 1;
   $('trophy').hidden = !(win && final);
   $('result-title').textContent = win ? (final ? 'Champions!' : 'You win!') : draw ? 'A draw!' : 'Full time';
@@ -784,29 +1211,33 @@ function endMatch() {
   $('final-teams').textContent = `${teamName()} vs ${L.rival}`;
   $('result-stars').innerHTML = '<b>' + '★'.repeat(st) + '</b>' + '★'.repeat(3 - st);
   $('result-note').textContent = win
-    ? (st === 3 ? 'Almost every shot went in first time. Amazing!' : `${M.firstTry} goals on the first try. Play again to earn more stars!`)
-    : draw ? 'So close! One more goal wins it. Try again!' : 'Tough match. Look at the tricky ones and try again!';
+    ? (st === 3 ? 'Almost everything right on the first try. Amazing!' : `${M.firstTry} right on the first try. Play again to earn more stars!`)
+    : draw ? 'So close! One more wins it. Try again!' : 'Tough match. Look at the tricky ones and try again!';
   $('tricky').hidden = M.tricky.length === 0;
-  $('tricky-list').innerHTML = M.tricky.map(s => `<li>${esc(s)}</li>`).join('');
+  $('tricky-list').innerHTML = [...new Set(M.tricky)].map(s => `<li>${esc(s)}</li>`).join('');
   $('next-match').hidden = !(win && !final);
   stadium.stop(); show('result');
   if (win) tone([523, 659, 784, 1047, 1319], 0.18);
 }
 
-/* ----- wiring ----- */
+/* ================= WIRING ================= */
 function start(hotData) {
-  loadSave(hotData); renderHome();
+  loadSave(hotData); renderHome(); tools.init();
+  const goHome = () => { stadium.stop(); M = null; renderHome(); show('home'); };
   $('team-name').addEventListener('input', e => { save.team = e.target.value; store(); });
   $('kits').addEventListener('change', e => { save.kit = e.target.value; document.documentElement.style.setProperty('--kit', save.kit); store(); });
-  $('fixtures').addEventListener('click', e => { const b = e.target.closest('.fixture'); if (b && !b.disabled) startMatch(Number(b.dataset.level)); });
+  $('home').addEventListener('click', e => { const b = e.target.closest('.fixture'); if (b && !b.disabled) startMatch(Number(b.dataset.level)); });
   $('unlock-all').addEventListener('click', () => { save.openAll = true; store(); renderHome(); });
-  $('zones').addEventListener('click', e => { const z = e.target.closest('.zone'); if (z && !z.disabled) shoot(Number(z.id.slice(5))); });
-  $('next').addEventListener('click', () => { if (M.i === M.qs.length - 1) endMatch(); else { M.i++; renderQuestion(); } });
-  $('leave').addEventListener('click', () => { stadium.stop(); M = null; renderHome(); show('home'); });
+  $('zones').addEventListener('click', e => { const z = e.target.closest('.zone'); if (z && !z.disabled) answer('zone-', Number(z.id.slice(5))); });
+  $('answers').addEventListener('click', e => { const z = e.target.closest('.ans'); if (z && !z.disabled) answer('ans-', Number(z.id.slice(4))); });
+  $('keypad').addEventListener('click', e => { const k = e.target.closest('.key'); if (k) keyTap(Number(k.dataset.d)); });
+  document.addEventListener('keydown', e => { if (M && M.kind === 'long' && /^\d$/.test(e.key) && !$('match').hidden) keyTap(Number(e.key)); });
+  $('next').addEventListener('click', () => { M.i = M.nextI; if (M.i >= M.qs.length) endMatch(); else renderQuestion(); });
+  $('leave').addEventListener('click', goHome);
+  $('to-season').addEventListener('click', goHome);
   $('sound').addEventListener('click', () => { save.sound = !save.sound; store(); $('sound').textContent = save.sound ? 'Sound on' : 'Sound off'; $('sound').setAttribute('aria-pressed', String(save.sound)); });
   $('next-match').addEventListener('click', () => startMatch(M.level + 1));
   $('replay').addEventListener('click', () => startMatch(M.level));
-  $('to-season').addEventListener('click', () => { M = null; renderHome(); show('home'); });
   try { window.claude?.hot?.snapshot(() => save); } catch (e) {}
 }
 if (typeof document !== 'undefined') {
