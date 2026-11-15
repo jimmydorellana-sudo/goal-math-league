@@ -11,7 +11,8 @@ The whole game is one file, `index.html`, with no build step and no dependencies
 | Match | Skill | How it plays |
 |---|---|---|
 | A. Subtraction Sprint | Subtract single digits (facts up to 18 − 9) | Dribble |
-| B. Stack and Add | Add two-digit numbers in columns | Add in columns |
+| B. Stack and Add | Add two-digit numbers in columns | Work in columns |
+| C. Stack and Subtract | Subtract two-digit numbers without regrouping | Work in columns |
 
 **Season**, following Grade 2 Module 4 (addition and subtraction within 200) in order
 
@@ -20,7 +21,7 @@ The whole game is one file, `index.html`, with no build step and no dependencies
 | 1. Warm-Up Passes | Add and take away tens | Dribble |
 | 2. Bundle Up | Add two-digit numbers and make a new ten | Shootout |
 | 3. Break a Ten | Subtract two-digit numbers and unbundle a ten | You are the goalie |
-| 4. Big Scores | Add up to 200 in columns | Add in columns |
+| 4. Big Scores | Add up to 200 in columns | Work in columns |
 | 5. Cup Semi-Final | Subtract from numbers up to 200 | You are the goalie |
 | 6. Cup Final | Everything together | Shootout |
 
@@ -29,7 +30,7 @@ The whole game is one file, `index.html`, with no build step and no dependencies
 - **Shootout:** tap the right answer in the goal to shoot.
 - **You are the goalie:** tap the right answer to dive and save the shot.
 - **Dribble:** each right answer takes the player past a defender; two in a row sets up a goal.
-- **Add in columns:** work the sum one digit at a time with a keypad, ones first, writing the new ten on the line.
+- **Work in columns:** work the sum one digit at a time with a keypad, ones first. In addition, the new ten is written on the line.
 
 A miss gets a hint and a second try. After a second miss, the coach walks through the problem step by step.
 

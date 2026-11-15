@@ -284,7 +284,7 @@ button { cursor: pointer; }
     <h2 class="section-title">Your season</h2>
     <ol class="fixtures" id="fixtures-season"></ol>
 
-    <p class="grownups">Grown-ups: training covers single-digit subtraction and adding in columns. The six season matches follow Grade 2 Module 4 in order.
+    <p class="grownups">Grown-ups: training covers single-digit subtraction, adding in columns, and two-digit subtraction without regrouping. The six season matches follow Grade 2 Module 4 in order.
       <button class="linkish" id="unlock-all" type="button">Open every match</button>
     </p>
   </section>
@@ -539,9 +539,14 @@ function storyQ(kind, team) {
   return q;
 }
 
-/* Steps for working an addition in columns, one digit at a time. */
+/* Steps for working a sum in columns, one digit at a time. Subtraction here never needs regrouping. */
 function longSteps(q) {
   const [a, b] = q.nums, A = digits(a), B = digits(b), steps = [];
+  if (q.op === '−') {
+    steps.push({ box: 'o', want: A[2] - B[2], prompt: `Subtract the ones: ${A[2]} − ${B[2]}. Write the ones digit.`, hint: `${A[2]} − ${B[2]} = ${A[2] - B[2]}. Write ${A[2] - B[2]} in the ones place.` });
+    steps.push({ box: 't', want: A[1] - B[1], prompt: `Subtract the tens: ${A[1]} − ${B[1]}. Write the tens digit.`, hint: `${A[1]} − ${B[1]} = ${A[1] - B[1]}. Write ${A[1] - B[1]} in the tens place.` });
+    return steps;
+  }
   const so = A[2] + B[2], c1 = so >= 10 ? 1 : 0, sT = A[1] + B[1] + c1, c2 = sT >= 10 ? 1 : 0, h = A[0] + B[0] + c2;
   steps.push({ box: 'o', want: so % 10, prompt: `Add the ones: ${A[2]} + ${B[2]}. Write the ones digit.`, hint: `${A[2]} + ${B[2]} = ${so}. Write ${so % 10} in the ones place.` });
   if (c1) steps.push({ box: 'c1', want: 1, prompt: `${so} is 1 ten and ${onesW(so - 10)}. Write the new ten on the line.`, hint: 'Write 1 for the 1 new ten.' });
@@ -555,6 +560,8 @@ const LEVELS = [
     build: () => [gen.subFact(true), gen.subFact(true), gen.subFact(true), gen.subFact(false), gen.subFact(false), gen.subFact(false)] },
   { id: 't2', group: 'training', kind: 'long', name: 'Stack and Add', skill: 'Add two-digit numbers in columns', rival: 'Paper Tigers', color: '#00a3b4', max: 99,
     build: () => [A2('add2Plain'), A2('add2Regroup'), A2('add2Regroup'), A2('add2Regroup'), A2('add2Regroup')] },
+  { id: 't3', group: 'training', kind: 'long', name: 'Stack and Subtract', skill: 'Subtract two-digit numbers, no regrouping', rival: 'Chalk Chargers', color: '#d6336c', max: 89,
+    build: () => [S2('sub2Plain'), S2('sub2Plain'), S2('sub2Plain'), S2('sub2Plain'), S2('sub2Plain')] },
   { id: 's1', group: 'season', kind: 'dribble', name: 'Warm-Up Passes', skill: 'Add and take away tens', rival: 'Rocket Rovers', color: '#7c5cff', max: 99,
     build: () => [gen.addTens(), gen.nextTen(), gen.subTens(), gen.addTens(), gen.subTens(), gen.nextTen()] },
   { id: 's2', group: 'season', kind: 'shootout', name: 'Bundle Up', skill: 'Add and make a new ten', rival: 'Thunder Town', color: '#ff8a1f', max: 99,
@@ -587,7 +594,7 @@ const KIND = {
   shootout: { tag: 'Shootout', next: 'Next shot', how: 'Tap the right answer to shoot.' },
   keeper: { tag: 'You are the goalie', next: 'Next shot', how: 'You are the goalie! Tap the right answer to dive and save.' },
   dribble: { tag: 'Dribble', next: 'Next attack', how: 'Tap the right answer to get past each defender, then shoot.' },
-  long: { tag: 'Add in columns', next: 'Next problem', how: 'Work it out in columns. Start with the ones.' }
+  long: { tag: 'Work in columns', next: 'Next problem', how: 'Work it out in columns. Start with the ones.' }
 };
 let save = { team: 'JJ United', kit: KITS[0], stars: {}, openAll: false, sound: true };
 let M = null, busy = false, audio = null;
@@ -1159,7 +1166,7 @@ function buildSheet(q) {
   const pad = n => { const s = String(n).split(''); while (s.length < 3) s.unshift(''); return s; };
   const has = b => M.steps.some(s => s.box === b), cell = t => `<span>${t}</span>`;
   const box = (b, small) => has(b) ? `<span class="box${small ? ' small' : ''}" id="box-${b}"></span>` : '<span></span>';
-  $('work').innerHTML = cell('') + pad(q.nums[0]).map(cell).join('') + cell('+') + pad(q.nums[1]).map(cell).join('')
+  $('work').innerHTML = cell('') + pad(q.nums[0]).map(cell).join('') + cell(q.op) + pad(q.nums[1]).map(cell).join('')
     + '<span class="rule"></span><span></span><span></span>' + box('c1', true) + '<span></span>'
     + '<span></span>' + box('h') + box('t') + box('o');
   setActive();
