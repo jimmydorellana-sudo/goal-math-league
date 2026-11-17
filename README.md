@@ -6,6 +6,8 @@ The game is `index.html` plus `phaser.min.js`, with no build step. Open `index.h
 
 The pitch scenes run on [Phaser 3](https://phaser.io) (version 3.90, arcade-physics build, MIT license; see `PHASER-LICENSE.md`). The scoreboard, column worksheet, coach hints and helper tools are ordinary page elements.
 
+The players, ball and goal nets are from the [Kenney Sports Pack](https://kenney.nl/assets/sports-pack) (CC0; see `assets/KENNEY-LICENSE.txt`). The pitch is drawn from above in the pack's grass colors.
+
 ## What it covers
 
 **Training ground** (always open)
@@ -32,6 +34,8 @@ The pitch scenes run on [Phaser 3](https://phaser.io) (version 3.90, arcade-phys
 - **Shootout:** swipe from the ball toward the right answer in the goal, or tap the answer.
 - **You are the goalie:** drag the keeper under the right answer and let go, or tap the answer.
 - **Dribble:** tap the pitch to run (or use the arrow keys). Run over the tile with the right answer at two gates, then tap the goal to shoot. The ball has real physics: it bounces off the posts and the keeper.
+
+All match types are seen from above.
 - **Work in columns:** work the sum one digit at a time with a keypad, ones first. In addition, the new ten is written on the line.
 
 A miss gets a hint and a second try. After a second miss, the coach walks through the problem step by step.
@@ -46,23 +50,16 @@ Problems are generated in the block between `/*LOGIC-START*/` and `/*LOGIC-END*/
 
 Progress (stars, team name, team color) is saved in the browser on each device.
 
-## Using your own artwork
+## Artwork
 
-Every picture on the pitch is a named texture. By default each one is drawn in code. To replace one with real art, add the image to an `assets` folder and list it in the `ART` map near the top of the pitch code in `index.html`:
+The sprites are packed into one sheet, `assets/kenney-atlas.png`, with a frame table in `assets/kenney-atlas.json` (name: x, y, width, height). Both are also embedded in `index.html` (the `ATLAS` and `FRAMES` constants in the pitch code), so the game still runs from a single page plus `phaser.min.js`. If the sheet changes, the embedded copy has to be replaced as well.
 
-```js
-const ART = { 'ball': 'assets/ball.png', 'kp-idle': 'assets/keeper.png' };
-```
-
-The names and their sizes (in pitch units; the pitch is 560 by 400) are in the `SIZE` map just below `ART`. Images are scaled to those sizes, so draw them at two or more times that size for sharpness.
-
-| Names | What they are |
+| Frames | What they are |
 |---|---|
-| `bg-goal`, `bg-field` | Backgrounds for the goal view and the dribble view |
-| `crowd-home`, `crowd-away`, `lights` | Crowd halves and floodlight glow |
-| `net`, `posts`, `ball`, `shadow`, `confetti` | Goal parts, ball and effects |
-| `kp-idle`, `kp-dive`, `kp-catch` | Keeper poses in the goal view (feet near the bottom centre) |
-| `st-idle`, `st-kick`, `st-joy`, `st-sad` | Penalty taker poses, seen from behind |
-| `pl-idle`, `pl-run1`, `pl-run2`, `pl-joy`, `df-idle`, `gk-field` | Dribble view: player, defender and keeper |
+| `red-b1` to `red-b5`, and the same for `blue`, `green`, `white` | Player bodies seen from above, five hair colors per kit (`red` is the pack's orange) |
+| `yellow-b1`, `lime-b1`, `grey-b1` | Keeper-style kits |
+| `*-arm`, `*-leg` (and `*-arm2`, `*-leg2` for darker skin), `bare-arm` | Limbs. Each player is a body plus two arms and two legs, posed and animated in code |
+| `ball` | Soccer ball |
+| `goal-top`, `goal-right` | Goals for the penalty view and the dribble view, built from the pack's net tile |
 
-Built-in characters are drawn in the team colors. Custom images are shown as they are, without recoloring.
+Team colors in the game are limited to kits that exist in the pack: blue, orange, white, yellow and lime. The green kit is left out because it is the same green as the grass.
