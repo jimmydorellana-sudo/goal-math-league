@@ -14,8 +14,10 @@ The players, ball and goal nets are from the [Kenney Sports Pack](https://kenney
 
 | Match | Skill | How it plays |
 |---|---|---|
-| Hundreds Join In | Module 4, Lessons 9 and 10: add a two-digit number to a three-digit number, making a new ten | Work in columns |
-| Unbundle or Not? | Module 4, Lessons 11 and 12: two-digit subtraction with and without unbundling a ten | Work in columns, starting with a yes or no decision |
+| Hundreds Join In | Module 4, Lessons 9 and 10: add a two-digit number to a three-digit number, writing the new ten below the line | Work in columns |
+| Read the Chips | Lessons 9 and 10: read two numbers from a place value chart and add them; bundles of ten plus loose ones | Shootout |
+| Quick Take-Aways | Lesson 11: take a one-digit number from a two-digit number in your head, with and without unbundling | You are the goalie |
+| Unbundle or Not? | Lessons 11 and 12: two-digit subtraction in columns, recording the new tens and ones above | Work in columns, starting with a yes or no decision |
 | Weekly Cup | Lessons 9 to 12 mixed | Dribble |
 
 **Training ground** (always open)

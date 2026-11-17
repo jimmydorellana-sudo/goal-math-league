@@ -263,6 +263,17 @@ button { cursor: pointer; }
 .yn .key { height: 58px; font-size: 19px; }
 .work .newones { font-size: 18px; color: #c0392b; height: 28px; line-height: 28px; }
 .work .struck { text-decoration: line-through; text-decoration-color: #c0392b; text-decoration-thickness: 3px; opacity: .6; }
+
+/* ---------- v7: place value chart with chips ---------- */
+.chipchart { display: grid; grid-template-columns: 1fr 1fr 1.4fr; background: #fff; color: var(--ink); border-radius: 12px; overflow: hidden; margin: 4px auto 0; width: min(100%, 330px); }
+.chipchart .ch { font-weight: 700; font-size: 14px; text-align: center; padding: 4px 0; border-bottom: 3px solid var(--ink); }
+.chipchart > span { border-right: 3px solid var(--ink); }
+.chipchart > span:nth-child(3n) { border-right: 0; }
+.chipchart .dots { display: flex; flex-wrap: wrap; gap: 4px; align-content: center; justify-content: center; padding: 7px 8px; min-height: 40px; max-width: 100%; }
+.chipchart .dots:nth-child(n+7) { border-top: 2px dashed #c9c5b1; }
+.chipchart .dots i { width: 13px; height: 13px; border-radius: 50%; background: var(--ink); }
+.chipchart .dots:nth-child(3n) { padding-left: 14px; padding-right: 14px; }
+.equation.small { font-size: clamp(30px, 9.4vw, 50px); }
 </style>
 </head>
 <body>
@@ -316,6 +327,7 @@ button { cursor: pointer; }
       <div class="dots" id="dots" aria-hidden="true"></div>
       <p class="howto" id="howto"></p>
       <p class="story" id="story" hidden></p>
+      <div class="chipchart" id="chips" hidden></div>
       <p class="equation" id="equation"></p>
     </div>
 
@@ -576,13 +588,48 @@ function longSteps(q) {
   return steps;
 }
 
+/* ----- problem types taken from the Lesson 9 to 12 homework pages ----- */
+function chipWords(n) { const d = digits(n), p = []; if (d[0]) p.push(hundW(d[0])); if (d[1]) p.push(tensW(d[1])); if (d[2]) p.push(onesW(d[2])); return p.join(', '); }
+function chipsQ() {                       // read two numbers from a place value chart, then add them
+  const [a, b] = gen.addBigThree(), q = addQ(a, b);
+  q.chips = [a, b]; q.text = 'The chips show two numbers. What is the total?'; q.story = true;
+  q.steps.unshift(`Top row: ${chipWords(a)} is ${a}. Bottom row: ${chipWords(b)} is ${b}. Add ${a} + ${b}.`);
+  return q;
+}
+function bundleQ(team) {                  // bundles of ten plus more than ten loose ones
+  const t = rnd(2, 7), l = rnd(11, 19), ans = t * 10 + l;
+  const text = pick([`Coach has ${t} bags of ten cones and ${l} loose cones. How many cones in all?`,
+    `${team} has ${t} packs of ten stickers and ${l} loose stickers. How many stickers in all?`,
+    `There are ${t} boxes of ten water bottles and ${l} loose bottles. How many bottles in all?`]);
+  return { display: `${t * 10} + ${l} = ?`, solved: `${t * 10} + ${l} = ${ans}`, ans, text, v: null, op: '+', nums: [t * 10, l], story: true,
+    opts: makeOpts(ans, [ans - 10], [ans + 10, ans + 1, ans - 1]),
+    steps: [`${l} loose ones is 1 ten and ${onesW(l - 10)}. Bundle the ten.`, `${tensW(t)} + 1 new ten = ${tensW(t + 1)}. Then add the ${onesW(l - 10)}.`, `${t * 10} + ${l} = ${ans}`] };
+}
+function subOneQ(a, b) {                  // two-digit minus one-digit, in your head
+  const at = Math.floor(a / 10), ao = a % 10, ans = a - b, cross = b > ao;
+  const steps = cross ? [`${onesW(ao)} is not enough to take away ${b}. Unbundle a ten: now you have ${ao + 10} ones.`, `${ao + 10} − ${b} = ${ao + 10 - b}. There are ${tensW(at - 1)} left.`]
+    : [`Only the ones change: ${ao} − ${b} = ${ao - b}. The tens stay at ${at}.`];
+  steps.push(`${a} − ${b} = ${ans}`);
+  return { display: `${a} − ${b} = ?`, solved: `${a} − ${b} = ${ans}`, ans, text: null, v: null, op: '−', nums: [a, b],
+    opts: makeOpts(ans, [cross ? at * 10 + (b - ao) : ans - 10, ans + 10], [ans - 10, ans + 1, ans - 1]), steps };
+}
+function subOnePair() {                   // the same number twice: once without unbundling, once with
+  const a = rnd(2, 8) * 10 + rnd(2, 7), ao = a % 10;
+  return [subOneQ(a, rnd(1, ao)), subOneQ(a, rnd(ao + 1, 9))];
+}
+const A2r = k => { const [a, b] = gen[k](); return addQ(b, a); };       // two-digit number written first
+
 const LEVELS = [
   { id: 'w1a', group: 'week', badge: '9-10', kind: 'long', name: 'Hundreds Join In', skill: 'Lessons 9 and 10: add a two-digit number to a three-digit number', rival: 'Tower Town', color: '#ffffff', max: 199,
-    build: () => shuffle([A2('addBigThreePlain'), A2('addBigThree'), A2('addBigThree'), A2('addBigThree'), A2('addBigThree')]) },
+    build: () => shuffle([A2('addBigThreePlain'), A2('addBigThree'), A2('addBigThree'), A2('addBigThree'), A2r('addBigThree')]) },
+  { id: 'w1d', group: 'week', badge: '9-10', kind: 'shootout', name: 'Read the Chips', skill: 'Lessons 9 and 10: read a place value chart, and bundle loose ones', rival: 'Chip City', color: '#e86a17', max: 199,
+    build: t => [chipsQ(), bundleQ(t), chipsQ(), A2r('addBigThree'), chipsQ(), bundleQ(t)] },
+  { id: 'w1e', group: 'week', badge: '11', kind: 'keeper', name: 'Quick Take-Aways', skill: 'Lesson 11: take a one-digit number from a two-digit number in your head', rival: 'Marble Jar', color: '#ffffff', max: 89,
+    build: () => [...subOnePair(), ...subOnePair(), ...subOnePair()] },
   { id: 'w1b', group: 'week', badge: '11-12', kind: 'long', name: 'Unbundle or Not?', skill: 'Lessons 11 and 12: subtract with and without unbundling a ten', rival: 'Ten Breakers', color: '#e86a17', max: 89,
     build: () => shuffle([D2('sub2Plain'), D2('sub2Plain'), D2('sub2Regroup'), D2('sub2Regroup'), D2('sub2Regroup')]) },
   { id: 'w1c', group: 'week', badge: 'Mix', kind: 'dribble', name: 'Weekly Cup', skill: 'Lessons 9 to 12 mixed together', rival: 'Friday FC', color: '#419fdd', max: 199,
-    build: () => [A2('addBigThree'), S2('sub2Regroup'), A2('addBigThreePlain'), S2('sub2Plain'), A2('addBigThree'), S2('sub2Regroup')] },
+    build: t => [A2('addBigThree'), subOnePair()[1], A2r('addBigThree'), S2('sub2Regroup'), Object.assign(bundleQ(t), { text: null, story: false }), S2('sub2Plain')] },   // plain sums only, so the pitch stays put while steering
   { id: 't1', group: 'training', kind: 'dribble', name: 'Subtraction Sprint', skill: 'Subtract single digits', rival: 'Cone City', color: '#ff8a1f', max: 9,
     build: () => [gen.subFact(true), gen.subFact(true), gen.subFact(true), gen.subFact(false), gen.subFact(false), gen.subFact(false)] },
   { id: 't2', group: 'training', kind: 'long', name: 'Stack and Add', skill: 'Add two-digit numbers in columns', rival: 'Paper Tigers', color: '#00a3b4', max: 99,
@@ -621,7 +668,7 @@ const TEAMS = {
 };
 const KITS = ['blue', 'red', 'white', 'yellow', 'lime'];
 const OLDKIT = { '#e5484d': 'red', '#2f6fed': 'blue', '#ffd23f': 'yellow', '#111827': 'blue', '#ff7ab6': 'red', '#f8f6ea': 'white' };
-const RIVAL = { w1a: 'white', w1b: 'red', w1c: 'blue', t1: 'red', t2: 'white', t3: 'blue', s1: 'white', s2: 'red', s3: 'blue', s4: 'white', s5: 'red', s6: 'blue' };
+const RIVAL = { w1a: 'white', w1d: 'red', w1e: 'white', w1b: 'red', w1c: 'blue', t1: 'red', t2: 'white', t3: 'blue', s1: 'white', s2: 'red', s3: 'blue', s4: 'white', s5: 'red', s6: 'blue' };
 function rivalOf(L) { const r = RIVAL[L.id] || 'red'; return r === save.kit ? ['red', 'blue', 'white'].find(t => t !== save.kit) : r; }
 const KEY = 'goal-math-league-v1';
 const WIN = [523, 659, 784, 1047], LOW = [220, 165];
@@ -1119,12 +1166,19 @@ function renderQuestion() {
   const q = M.qs[M.i]; M.tries = 0; M.jump = null; busy = false;
   renderScore(true); $('banner').hidden = true;
   $('story').hidden = !q.text; $('story').textContent = q.text || '';
-  $('equation').innerHTML = q.text ? '<span class="q">?</span>' : esc(q.display).replace('?', '<span class="q">?</span>');
+  $('chips').hidden = !q.chips; $('chips').innerHTML = q.chips ? chipsHTML(q.chips) : '';
+  $('howto').hidden = !!q.text; $('equation').hidden = !!q.chips;      // keep the board short when there is a story or a chart
+  showEq(q.text ? '?' : q.display);
   $('coach').hidden = true; $('next').hidden = true;
   if (M.kind === 'dribble') { if (M.i % 2 === 0) stadium.fieldReset(); stadium.fieldGate(M.i % 2, q.opts); }
   else if (M.kind === 'long') { stadium.reset(); buildSheet(q); }
   else { stadium.reset(); fillButtons('zone-', q, M.kind === 'keeper' ? 'Dive to ' : 'Shoot at '); }
   tools.setQ(q);
+}
+function chipsHTML(nums) {            // a place value chart with one row of chips per number
+  const dots = n => '<span class="dots">' + '<i></i>'.repeat(n) + '</span>';
+  return '<span class="ch">hundreds</span><span class="ch">tens</span><span class="ch">ones</span>'
+    + nums.map(n => digits(n).map(dots).join('')).join('');
 }
 function vformHTML(v, full, ans) {
   if (!v) return '';
@@ -1151,12 +1205,17 @@ function firstMiss(q, prefix, resetFn) {
   M.tries = 1; M.tricky.push(q.solved); coach(q, false);
   later(1500, () => { resetFn(); $('banner').hidden = true; btns(prefix).forEach(b => { b.disabled = b.classList.contains('out'); }); busy = false; });
 }
+function showEq(t) {                  // sums stay on one line; long ones get smaller type
+  const e = $('equation'); e.classList.toggle('small', t.length > 11);
+  e.innerHTML = esc(glue(t)).replace('?', '<span class="q">?</span>');
+}
 function finishShot() {
   renderScore(false);
   M.nextI = M.jump === null ? M.i + 1 : M.jump;
   $('next').textContent = M.nextI >= M.qs.length ? 'Full time!' : KIND[M.kind].next;
   $('next').hidden = false;
-  if (M.marks[M.i] !== 'miss') $('equation').innerHTML = esc(M.qs[M.i].solved);
+  $('equation').hidden = false;
+  if (M.marks[M.i] !== 'miss' || M.qs[M.i].chips) showEq(M.qs[M.i].solved);
 }
 function answer(prefix, i) {
   if (busy || !M) return;
