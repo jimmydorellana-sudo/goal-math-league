@@ -10,6 +10,14 @@ The players, ball and goal nets are from the [Kenney Sports Pack](https://kenney
 
 ## What it covers
 
+**This week in class** (always open; replaced as the class moves on)
+
+| Match | Skill | How it plays |
+|---|---|---|
+| Hundreds Join In | Module 4, Lessons 9 and 10: add a two-digit number to a three-digit number, making a new ten | Work in columns |
+| Unbundle or Not? | Module 4, Lessons 11 and 12: two-digit subtraction with and without unbundling a ten | Work in columns, starting with a yes or no decision |
+| Weekly Cup | Lessons 9 to 12 mixed | Dribble |
+
 **Training ground** (always open)
 
 | Match | Skill | How it plays |

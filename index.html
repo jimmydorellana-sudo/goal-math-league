@@ -256,6 +256,13 @@ button { cursor: pointer; }
 .zone { align-items: center; padding: 0; }
 .banner { top: 52%; }
 .scene.field .banner { top: 11%; }
+
+/* ---------- v6: weekly class lessons, unbundle-or-not step ---------- */
+.fixture .num.w { background: var(--kit); color: var(--ink); font-size: 14px; letter-spacing: 0; border: 3px solid var(--ink); }
+.yn { display: grid; gap: 10px; width: 292px; max-width: 100%; }
+.yn .key { height: 58px; font-size: 19px; }
+.work .newones { font-size: 18px; color: #c0392b; height: 28px; line-height: 28px; }
+.work .struck { text-decoration: line-through; text-decoration-color: #c0392b; text-decoration-thickness: 3px; opacity: .6; }
 </style>
 </head>
 <body>
@@ -279,13 +286,16 @@ button { cursor: pointer; }
       </div>
     </div>
 
+    <h2 class="section-title">This week in class</h2>
+    <ol class="fixtures" id="fixtures-week"></ol>
+
     <h2 class="section-title">Training ground</h2>
     <ol class="fixtures" id="fixtures-training"></ol>
 
     <h2 class="section-title">Your season</h2>
     <ol class="fixtures" id="fixtures-season"></ol>
 
-    <p class="grownups">Grown-ups: training covers single-digit subtraction, adding in columns, and two-digit subtraction without regrouping. The six season matches follow Grade 2 Module 4 in order.
+    <p class="grownups">Grown-ups: the top section follows this week's class lessons. Training covers single-digit subtraction, adding in columns, and two-digit subtraction without regrouping. The six season matches follow Grade 2 Module 4 in order.
       <button class="linkish" id="unlock-all" type="button">Open every match</button>
     </p>
   </section>
@@ -335,6 +345,10 @@ button { cursor: pointer; }
           <button class="key" type="button" id="key-8" data-d="8">8</button>
           <button class="key" type="button" id="key-9" data-d="9">9</button>
           <button class="key" type="button" id="key-0" data-d="0">0</button>
+        </div>
+        <div class="yn" id="yn" hidden>
+          <button class="key" type="button" id="yn-yes" data-a="yes">Yes, enough ones</button>
+          <button class="key" type="button" id="yn-no" data-a="no">No, unbundle a ten</button>
         </div>
       </div>
     </div>
@@ -509,10 +523,12 @@ const gen = {
   subBigHund() { const at = rnd(0, 8), bt = rnd(at + 1, 9), ao = rnd(1, 9), bo = rnd(0, ao); return [100 + at * 10 + ao, bt * 10 + bo]; },
   subBigBoth() { const bo = rnd(2, 9), ao = rnd(0, bo - 1), at = rnd(1, 8), bt = rnd(at, 9); return [100 + at * 10 + ao, bt * 10 + bo]; },
   subBigZero() { const ao = rnd(0, 8), bo = rnd(ao + 1, 9), bt = rnd(1, 9); return [100 + ao, bt * 10 + bo]; },
+  addBigThreePlain() { const ao = rnd(1, 8), bo = rnd(1, 9 - ao), at = rnd(0, 7), bt = rnd(1, 9 - at); return [100 + at * 10 + ao, bt * 10 + bo]; },
   subBigOnes() { const bo = rnd(2, 9), ao = rnd(0, bo - 1), at = rnd(2, 9), bt = rnd(1, at - 1); return [100 + at * 10 + ao, bt * 10 + bo]; }
 };
 const A2 = k => addQ(...gen[k]());
 const S2 = k => subQ(...gen[k]());
+const D2 = k => Object.assign(subQ(...gen[k]()), { decide: true });   // column subtraction that starts with an unbundle-or-not decision
 
 function storyQ(kind, team) {
   if (kind === 'add') {
@@ -538,6 +554,15 @@ function storyQ(kind, team) {
 /* Steps for working a sum in columns, one digit at a time. Subtraction here never needs regrouping. */
 function longSteps(q) {
   const [a, b] = q.nums, A = digits(a), B = digits(b), steps = [];
+  if (q.op === '−' && q.decide) {
+    const need = A[2] < B[2], ones = need ? A[2] + 10 : A[2], tensLeft = need ? A[1] - 1 : A[1];
+    steps.push({ box: 'yn', want: need ? 'no' : 'yes', prompt: `Look at the ones. Do you have enough ones to take ${B[2]} from ${A[2]}?`,
+      hint: need ? `${A[2]} is less than ${B[2]}. You need more ones, so unbundle a ten.` : `${A[2]} is enough to take away ${B[2]}. You do not need to unbundle.` });
+    if (need) steps.push({ box: 'nt', want: A[1] - 1, prompt: `Unbundle 1 ten into 10 ones. How many tens are left?`, hint: `${tensW(A[1])} take away 1 ten leaves ${tensW(A[1] - 1)}. Write ${A[1] - 1}.` });
+    steps.push({ box: 'o', want: ones - B[2], prompt: `Subtract the ones: ${ones} − ${B[2]}. Write the ones digit.`, hint: `${ones} − ${B[2]} = ${ones - B[2]}. Write ${ones - B[2]} in the ones place.` });
+    if (tensLeft - B[1] > 0) steps.push({ box: 't', want: tensLeft - B[1], prompt: `Subtract the tens: ${tensLeft} − ${B[1]}. Write the tens digit.`, hint: `${tensLeft} − ${B[1]} = ${tensLeft - B[1]}. Write ${tensLeft - B[1]} in the tens place.` });
+    return steps;
+  }
   if (q.op === '−') {
     steps.push({ box: 'o', want: A[2] - B[2], prompt: `Subtract the ones: ${A[2]} − ${B[2]}. Write the ones digit.`, hint: `${A[2]} − ${B[2]} = ${A[2] - B[2]}. Write ${A[2] - B[2]} in the ones place.` });
     steps.push({ box: 't', want: A[1] - B[1], prompt: `Subtract the tens: ${A[1]} − ${B[1]}. Write the tens digit.`, hint: `${A[1]} − ${B[1]} = ${A[1] - B[1]}. Write ${A[1] - B[1]} in the tens place.` });
@@ -552,6 +577,12 @@ function longSteps(q) {
 }
 
 const LEVELS = [
+  { id: 'w1a', group: 'week', badge: '9-10', kind: 'long', name: 'Hundreds Join In', skill: 'Lessons 9 and 10: add a two-digit number to a three-digit number', rival: 'Tower Town', color: '#ffffff', max: 199,
+    build: () => shuffle([A2('addBigThreePlain'), A2('addBigThree'), A2('addBigThree'), A2('addBigThree'), A2('addBigThree')]) },
+  { id: 'w1b', group: 'week', badge: '11-12', kind: 'long', name: 'Unbundle or Not?', skill: 'Lessons 11 and 12: subtract with and without unbundling a ten', rival: 'Ten Breakers', color: '#e86a17', max: 89,
+    build: () => shuffle([D2('sub2Plain'), D2('sub2Plain'), D2('sub2Regroup'), D2('sub2Regroup'), D2('sub2Regroup')]) },
+  { id: 'w1c', group: 'week', badge: 'Mix', kind: 'dribble', name: 'Weekly Cup', skill: 'Lessons 9 to 12 mixed together', rival: 'Friday FC', color: '#419fdd', max: 199,
+    build: () => [A2('addBigThree'), S2('sub2Regroup'), A2('addBigThreePlain'), S2('sub2Plain'), A2('addBigThree'), S2('sub2Regroup')] },
   { id: 't1', group: 'training', kind: 'dribble', name: 'Subtraction Sprint', skill: 'Subtract single digits', rival: 'Cone City', color: '#ff8a1f', max: 9,
     build: () => [gen.subFact(true), gen.subFact(true), gen.subFact(true), gen.subFact(false), gen.subFact(false), gen.subFact(false)] },
   { id: 't2', group: 'training', kind: 'long', name: 'Stack and Add', skill: 'Add two-digit numbers in columns', rival: 'Paper Tigers', color: '#00a3b4', max: 99,
@@ -590,7 +621,7 @@ const TEAMS = {
 };
 const KITS = ['blue', 'red', 'white', 'yellow', 'lime'];
 const OLDKIT = { '#e5484d': 'red', '#2f6fed': 'blue', '#ffd23f': 'yellow', '#111827': 'blue', '#ff7ab6': 'red', '#f8f6ea': 'white' };
-const RIVAL = { t1: 'red', t2: 'white', t3: 'blue', s1: 'white', s2: 'red', s3: 'blue', s4: 'white', s5: 'red', s6: 'blue' };
+const RIVAL = { w1a: 'white', w1b: 'red', w1c: 'blue', t1: 'red', t2: 'white', t3: 'blue', s1: 'white', s2: 'red', s3: 'blue', s4: 'white', s5: 'red', s6: 'blue' };
 function rivalOf(L) { const r = RIVAL[L.id] || 'red'; return r === save.kit ? ['red', 'blue', 'white'].find(t => t !== save.kit) : r; }
 const KEY = 'goal-math-league-v1';
 const WIN = [523, 659, 784, 1047], LOW = [220, 165];
@@ -1038,7 +1069,7 @@ const tools = (() => {
 /* ================= HOME ================= */
 function isOpen(i) {
   const L = LEVELS[i];
-  if (L.group === 'training' || save.openAll) return true;
+  if (L.group !== 'season' || save.openAll) return true;
   const prev = LEVELS[i - 1];
   return prev.group !== 'season' || (save.stars[prev.id] || 0) > 0;
 }
@@ -1047,17 +1078,17 @@ function renderHome() {
   document.documentElement.style.setProperty('--kit', TEAMS[save.kit].hex);
   $('kits').innerHTML = KITS.map((c, i) =>
     `<span><input type="radio" name="kit" id="kit-${i}" value="${c}" ${c === save.kit ? 'checked' : ''}><label for="kit-${i}" style="--c:${TEAMS[c].hex}" aria-label="${TEAMS[c].name}"></label></span>`).join('');
-  const html = { training: '', season: '' }; let tn = 0, sn = 0;
+  const html = { week: '', training: '', season: '' }; let tn = 0, sn = 0;
   LEVELS.forEach((L, i) => {
     const st = save.stars[L.id] || 0, open = isOpen(i), tr = L.group === 'training';
-    const label = tr ? 'ABCD'[tn++] : ++sn;
+    const wk = L.group === 'week', label = wk ? L.badge : tr ? 'ABCD'[tn++] : ++sn;
     const stars = '<b>' + '★'.repeat(st) + '</b>' + '★'.repeat(3 - st);
     html[L.group] += `<li><button class="fixture" type="button" id="fixture-${L.id}" data-level="${i}" ${open ? '' : 'disabled'}>
-      <span class="num${tr ? ' t' : ''}">${label}</span>
+      <span class="num${tr ? ' t' : wk ? ' w' : ''}">${label}</span>
       <span><span class="name">${esc(L.name)}</span><br><span class="skill">${open ? esc(L.skill) : 'Win match ' + (sn - 1) + ' to open'}</span><br><span class="tag">${KIND[L.kind].tag}</span></span>
       <span class="stars" aria-label="${st} of 3 stars">${stars}</span></button></li>`;
   });
-  $('fixtures-training').innerHTML = html.training; $('fixtures-season').innerHTML = html.season;
+  $('fixtures-week').innerHTML = html.week; $('fixtures-training').innerHTML = html.training; $('fixtures-season').innerHTML = html.season;
   $('unlock-all').hidden = save.openAll;
 }
 
@@ -1200,29 +1231,47 @@ function buildSheet(q) {
   const pad = n => { const s = String(n).split(''); while (s.length < 3) s.unshift(''); return s; };
   const has = b => M.steps.some(s => s.box === b), cell = t => `<span>${t}</span>`;
   const box = (b, small) => has(b) ? `<span class="box${small ? ' small' : ''}" id="box-${b}"></span>` : '<span></span>';
-  $('work').innerHTML = cell('') + pad(q.nums[0]).map(cell).join('') + cell(q.op) + pad(q.nums[1]).map(cell).join('')
+  const top = pad(q.nums[0]), ids = ['a-h', 'a-t', 'a-o'];
+  $('work').innerHTML = (q.decide ? '<span></span><span></span>' + box('nt', true) + '<span class="newones" id="new-ones"></span>' : '')
+    + cell('') + top.map((t, i) => `<span id="${ids[i]}">${t}</span>`).join('') + cell(q.op) + pad(q.nums[1]).map(cell).join('')
     + '<span class="rule"></span><span></span><span></span>' + box('c1', true) + '<span></span>'
     + '<span></span>' + box('h') + box('t') + box('o');
   setActive();
 }
-function setActive() {
-  const s = M.steps[M.si];
-  document.querySelectorAll('#work .box').forEach(b => b.classList.remove('active'));
-  $('box-' + s.box).classList.add('active'); $('sheet-prompt').textContent = s.prompt;
+function ynTap(a) {
+  if (busy || !M || M.kind !== 'long' || !M.steps || M.si >= M.steps.length) return;
+  const s = M.steps[M.si]; if (s.box !== 'yn') return;
+  if (a === s.want) { tone([660], 0.08); nextStep(); return; }
+  M.slips++; M.stepWrong++; tone([180], 0.12, 'sawtooth');
+  if (M.stepWrong === 1) $('sheet-prompt').textContent = glue('Not quite. ' + s.hint);
+  else { M.revealed = true; nextStep(); }
 }
+function setActive() {
+  const s = M.steps[M.si], yn = s.box === 'yn';
+  document.querySelectorAll('#work .box').forEach(b => b.classList.remove('active'));
+  $('yn').hidden = !yn; $('keypad').hidden = yn;
+  if (!yn) $('box-' + s.box).classList.add('active');
+  $('sheet-prompt').textContent = glue(s.prompt);
+}
+function glue(t) { return t.replace(/ ([−+=]) /g, '\u00a0$1\u00a0'); }   // keep sums on one line
 function keyTap(d) {
   if (busy || !M || M.kind !== 'long' || !M.steps || M.si >= M.steps.length) return;
-  const s = M.steps[M.si], box = $('box-' + s.box);
+  const s = M.steps[M.si]; if (s.box === 'yn') return;
+  const box = $('box-' + s.box);
   if (d === s.want) { box.textContent = d; box.classList.add('ok'); tone([660], 0.08); nextStep(); return; }
   M.slips++; M.stepWrong++; tone([180], 0.12, 'sawtooth');
   box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
-  if (M.stepWrong === 1) $('sheet-prompt').textContent = 'Not quite. ' + s.hint;
+  if (M.stepWrong === 1) $('sheet-prompt').textContent = glue('Not quite. ' + s.hint);
   else { box.textContent = s.want; box.classList.add('shown'); M.revealed = true; nextStep(); }
 }
 function nextStep() {
+  if (M.steps[M.si].box === 'nt') {             // the ten has been unbundled: show the new ones and cross out the old digits
+    const q0 = M.qs[M.i]; $('new-ones').textContent = (q0.nums[0] % 10) + 10; $('a-t').classList.add('struck'); $('a-o').classList.add('struck');
+  }
   M.si++; M.stepWrong = 0;
   document.querySelectorAll('#work .box').forEach(b => b.classList.remove('active'));
   if (M.si < M.steps.length) { setActive(); return; }
+  $('yn').hidden = true; $('keypad').hidden = false;
   const q = M.qs[M.i], zi = rnd(0, 2), miss = M.revealed;
   busy = true; $('sheet-prompt').textContent = q.solved;
   try { $('scene').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
@@ -1273,6 +1322,7 @@ function start(hotData) {
   stadium.on.aim = zi => { const z = $('zone-' + zi); if (M && !busy && !z.disabled && !$('zones').hidden) answer('zone-', zi); };
   stadium.on.tile = dribble; stadium.on.fieldGoal = dribbleGoal; stadium.on.kick = () => tone([150], 0.1, 'square');
   $('keypad').addEventListener('click', e => { const k = e.target.closest('.key'); if (k) keyTap(Number(k.dataset.d)); });
+  $('yn').addEventListener('click', e => { const k = e.target.closest('.key'); if (k) ynTap(k.dataset.a); });
   document.addEventListener('keydown', e => { if (M && M.kind === 'long' && /^\d$/.test(e.key) && !$('match').hidden) keyTap(Number(e.key)); });
   $('next').addEventListener('click', () => { M.i = M.nextI; if (M.i >= M.qs.length) endMatch(); else renderQuestion(); });
   $('leave').addEventListener('click', goHome);
