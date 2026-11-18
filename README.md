@@ -8,6 +8,11 @@ The pitch scenes run on [Phaser 3](https://phaser.io) (version 3.90, arcade-phys
 
 The players, ball and goal nets are from the [Kenney Sports Pack](https://kenney.nl/assets/sports-pack) (CC0; see `assets/KENNEY-LICENSE.txt`). The pitch is drawn from above in the pack's grass colors.
 
+## Games on the page
+
+- **Goal Math League:** the soccer game described below.
+- **Math City:** every solved problem adds a piece to a building, and finished buildings fill a 12-lot city saved on the device. Problems are drawn from the matches under "This week in class". Buildings (house, park, shop, school, fire station, apartment tower, stadium, clock tower) unlock as the city grows, and a building finished with no mistakes gets a gold star. The buildings are drawn in code as small SVG pictures.
+
 ## What it covers
 
 **This week in class** (always open; replaced as the class moves on)

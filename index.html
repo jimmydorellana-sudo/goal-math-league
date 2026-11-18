@@ -274,6 +274,60 @@ button { cursor: pointer; }
 .chipchart .dots i { width: 13px; height: 13px; border-radius: 50%; background: var(--ink); }
 .chipchart .dots:nth-child(3n) { padding-left: 14px; padding-right: 14px; }
 .equation.small { font-size: clamp(30px, 9.4vw, 50px); }
+
+/* ---------- v8: games menu and Math City ---------- */
+.games { display: grid; gap: 12px; }
+.gamecard {
+  display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; text-align: left; text-decoration: none; width: 100%;
+  background: var(--chalk); color: var(--ink); border: 0; border-radius: 18px; padding: 12px 14px; min-height: 88px; box-shadow: 0 5px 0 var(--pitch-deep); cursor: pointer;
+}
+.gamecard:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--pitch-deep); }
+.gamecard .name { font-weight: 700; font-size: 21px; line-height: 1.15; }
+.gamecard .skill { font-size: 16px; font-weight: 500; opacity: .8; }
+.gc-art { width: 64px; height: 64px; display: block; }
+.gc-art svg, .site-art svg, .lot svg, .bm-item svg { display: block; width: 100%; height: 100%; }
+.masthead h1.small { font-size: clamp(34px, 10.5vw, 54px); }
+.pill.static { cursor: default; display: inline-flex; align-items: center; }
+.citymap { background: #2fa860; border-radius: 18px; padding: 12px 12px 4px; box-shadow: 0 5px 0 var(--pitch-deep); }
+.lots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.lot {
+  position: relative; aspect-ratio: 1; padding: 2px; border: 3px dashed rgba(255,255,255,.7); border-radius: 12px; background: rgba(255,255,255,.12);
+  color: #fff; font-family: var(--display); font-size: 30px; line-height: 1; min-width: 0;
+}
+.lot.built { border: 3px solid transparent; background: rgba(255,255,255,.14); }
+.lot .prog { position: absolute; left: 50%; bottom: 3px; transform: translateX(-50%); background: var(--board); color: var(--chalk); border-radius: 999px; padding: 1px 8px; font-family: var(--body); font-size: 13px; font-weight: 700; }
+.lot .gold { position: absolute; right: 2px; top: 0; color: var(--ball); font-size: 20px; -webkit-text-stroke: 1px var(--ink); }
+.road { height: 20px; background: #56616b; border-radius: 6px; margin: 8px -4px; position: relative; }
+.road::after { content: ""; position: absolute; left: 8px; right: 8px; top: 50%; border-top: 3px dashed var(--chalk); transform: translateY(-50%); opacity: .8; }
+.buildmenu { display: flex; flex-direction: column; gap: 12px; }
+.buildmenu h3, .sitecard h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 20px; text-transform: uppercase; }
+.bm-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.bm-item { display: grid; grid-template-columns: 54px 1fr; column-gap: 10px; align-items: center; text-align: left; background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 14px; padding: 8px; min-width: 0; }
+.bm-item svg { grid-row: span 2; width: 54px; height: 54px; }
+.bm-item:disabled { opacity: .5; cursor: not-allowed; }
+.bm-name { font-weight: 700; font-size: 16px; line-height: 1.1; align-self: end; }
+.bm-sub { font-size: 13px; font-weight: 500; opacity: .8; align-self: start; }
+.sitecard { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; }
+.site-art { width: 110px; height: 110px; background: #7fc8f8; border-radius: 14px; border: 3px solid var(--ink); overflow: hidden; }
+.site-art.pop { animation: built .6s cubic-bezier(.2,1.6,.4,1); }
+@keyframes built { from { transform: scale(.7); } to { transform: scale(1); } }
+.site-info { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.site-info .dots { justify-content: flex-start; flex-wrap: wrap; }
+.site-info .dot { border-color: #9aa79f; }
+.site-info .dot.goal { border-color: #b58a00; }
+.site-info p { margin: 0; font-size: 17px; font-weight: 500; }
+.answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.ans { border: 0; background: none; padding: 0; }
+.ans span {
+  display: grid; place-items: center; height: 68px; background: var(--chalk); color: var(--ink);
+  border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 5px 0 var(--pitch-deep);
+  font-family: var(--display); font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums;
+}
+.ans:not(:disabled):hover span { background: var(--ball); }
+.ans:not(:disabled):active span { transform: translateY(3px); box-shadow: 0 2px 0 var(--pitch-deep); }
+.ans.out span { opacity: .45; text-decoration: line-through; }
+.ans.right span { background: var(--ball); }
+@media (prefers-reduced-motion: reduce) { .site-art.pop { animation: none; } }
 </style>
 </head>
 <body>
@@ -297,7 +351,13 @@ button { cursor: pointer; }
       </div>
     </div>
 
-    <h2 class="section-title">This week in class</h2>
+    <h2 class="section-title">Pick a game</h2>
+    <div class="games">
+      <a class="gamecard" href="#soccer" id="go-soccer"><span class="gc-art" id="gc-soccer"></span><span><span class="name">Goal Math League</span><br><span class="skill">Soccer matches. Scroll down to play.</span></span></a>
+      <button class="gamecard" type="button" id="open-city"><span class="gc-art" id="gc-city"></span><span><span class="name">Math City</span><br><span class="skill" id="gc-city-sub">Solve problems to build your own city.</span></span></button>
+    </div>
+
+    <h2 class="section-title" id="soccer">Soccer: this week in class</h2>
     <ol class="fixtures" id="fixtures-week"></ol>
 
     <h2 class="section-title">Training ground</h2>
@@ -309,6 +369,53 @@ button { cursor: pointer; }
     <p class="grownups">Grown-ups: the top section follows this week's class lessons. Training covers single-digit subtraction, adding in columns, and two-digit subtraction without regrouping. The six season matches follow Grade 2 Module 4 in order.
       <button class="linkish" id="unlock-all" type="button">Open every match</button>
     </p>
+  </section>
+
+  <!-- ================= MATH CITY ================= -->
+  <section id="city" hidden style="display:contents">
+    <div class="topbar">
+      <button class="pill" id="city-home" type="button">Back to games</button>
+      <span class="pill static" id="city-pop">Population 0</span>
+    </div>
+    <header class="masthead">
+      <h1 class="small"><em id="city-title">Math City</em></h1>
+      <p id="city-rank"></p>
+    </header>
+    <div class="citymap" id="citymap"></div>
+    <div class="card buildmenu" id="buildmenu" hidden>
+      <h3 id="bm-title">What will you build?</h3>
+      <div class="bm-list" id="bm-list"></div>
+      <button class="mini" type="button" id="bm-cancel">Cancel</button>
+    </div>
+    <p class="grownups">Grown-ups: every problem comes from the lessons under "this week in class". The city is saved on this device.</p>
+  </section>
+
+  <section id="site" hidden style="display:contents">
+    <div class="topbar">
+      <button class="pill" id="site-leave" type="button">Back to my city</button>
+    </div>
+    <div class="card sitecard">
+      <div class="site-art" id="site-art"></div>
+      <div class="site-info">
+        <h3 id="site-name"></h3>
+        <div class="dots" id="site-dots" aria-hidden="true"></div>
+        <p id="site-note"></p>
+      </div>
+    </div>
+    <div class="board">
+      <p class="howto">Each right answer adds a piece to your building.</p>
+      <p class="story" id="c-story" hidden></p>
+      <div class="chipchart" id="c-chips" hidden></div>
+      <p class="equation" id="c-eq"></p>
+    </div>
+    <div class="answers" id="c-answers">
+      <button class="ans" type="button" id="c-ans-0"><span></span></button>
+      <button class="ans" type="button" id="c-ans-1"><span></span></button>
+      <button class="ans" type="button" id="c-ans-2"><span></span></button>
+    </div>
+    <div id="site-coach-slot" style="display:contents"></div>
+    <button class="big-btn" id="site-next" type="button" hidden>Next problem</button>
+    <div id="site-tools-slot" style="display:contents"></div>
   </section>
 
   <!-- ================= MATCH ================= -->
@@ -695,7 +802,7 @@ function loadSave(hotData) {
 function store() { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) {} }
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 function teamName() { return (save.team || '').trim() || 'My Team'; }
-function show(id) { for (const s of ['home', 'match', 'result']) $(s).hidden = s !== id; window.scrollTo(0, 0); }
+function show(id) { for (const s of ['home', 'city', 'site', 'match', 'result']) $(s).hidden = s !== id; window.scrollTo(0, 0); }
 function later(ms, fn) { const m = M; setTimeout(() => { if (M === m) fn(); }, ms); }
 
 /* ----- sound ----- */
@@ -1137,6 +1244,9 @@ function renderHome() {
   });
   $('fixtures-week').innerHTML = html.week; $('fixtures-training').innerHTML = html.training; $('fixtures-season').innerHTML = html.season;
   $('unlock-all').hidden = save.openAll;
+  const cs = city.summary();
+  $('gc-city').innerHTML = cs.icon; $('gc-city-sub').textContent = cs.n ? `${cs.name}: ${cs.n} of 12 buildings, population ${cs.pop}.` : 'Solve problems to build your own city.';
+  $('gc-soccer').innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" fill="#fff" stroke="#10261b" stroke-width="5"/><polygon points="50,32 67,44 60,64 40,64 33,44" fill="#10261b"/><path d="M50 32V12M67 44l19-8M60 64l13 19M40 64L27 83M33 44l-19-8" stroke="#10261b" stroke-width="5" stroke-linecap="round"/></svg>';
 }
 
 /* ================= MATCH ================= */
@@ -1369,9 +1479,151 @@ function endMatch() {
   if (win) tone([523, 659, 784, 1047, 1319], 0.18);
 }
 
+
+/* ================= MATH CITY =================
+   A second game on the page. Every solved problem adds a piece to a building, and finished
+   buildings fill a city that is saved on the device. Problems come from this week's lessons. */
+const city = (() => {
+  const TYPES = [
+    { id: 'house', name: 'House', need: 3, pop: 4, unlock: 0 },
+    { id: 'park', name: 'Park', need: 3, pop: 0, unlock: 0 },
+    { id: 'shop', name: 'Shop', need: 4, pop: 6, unlock: 2 },
+    { id: 'school', name: 'School', need: 5, pop: 12, unlock: 4 },
+    { id: 'fire', name: 'Fire station', need: 5, pop: 10, unlock: 5 },
+    { id: 'tower', name: 'Apartment tower', need: 6, pop: 40, unlock: 7 },
+    { id: 'stadium', name: 'Soccer stadium', need: 7, pop: 20, unlock: 9 },
+    { id: 'clock', name: 'Clock tower', need: 8, pop: 15, unlock: 11 }
+  ];
+  const RANKS = [[12, 'a Big City'], [9, 'a City'], [6, 'a Town'], [3, 'a Village'], [1, 'a Camp']];
+  const LOTS = 12, INK2 = '#10261b';
+  let C = null, pool = [], pickLot = null, uid = 0;
+  const type = id => TYPES.find(t => t.id === id);
+
+  /* ----- buildings, drawn as small pictures ----- */
+  const ART = {
+    house: '<rect x="62" y="28" width="9" height="18" fill="#8d5a3b"/><rect x="24" y="52" width="52" height="40" fill="#f6c177"/><polygon points="16,54 50,24 84,54" fill="#d1495b"/><rect x="44" y="68" width="13" height="24" fill="#7a4a25"/><rect x="29" y="62" width="11" height="11" fill="#bfe3ff"/><rect x="62" y="62" width="11" height="11" fill="#bfe3ff"/>',
+    park: '<ellipse cx="50" cy="84" rx="40" ry="9" fill="#7ad67f"/><rect x="26" y="58" width="6" height="26" fill="#8d5a3b"/><circle cx="29" cy="48" r="16" fill="#2fa860"/><rect x="66" y="64" width="6" height="20" fill="#8d5a3b"/><circle cx="69" cy="54" r="13" fill="#1f8a45"/><ellipse cx="50" cy="86" rx="12" ry="4" fill="#7ec8ff"/>',
+    shop: '<rect x="18" y="44" width="64" height="48" fill="#ffe08a"/><rect x="14" y="30" width="72" height="14" fill="#2f6fed"/><polygon points="14,44 86,44 80,58 20,58" fill="#f8f6ea"/><path d="M32 44l-3 14M50 44v14M68 44l3 14" fill="none"/><rect x="26" y="64" width="24" height="18" fill="#bfe3ff"/><rect x="58" y="64" width="14" height="28" fill="#7a4a25"/>',
+    school: '<rect x="12" y="52" width="76" height="40" fill="#e9967a"/><rect x="36" y="52" width="28" height="40" fill="#f2b199"/><polygon points="34,52 50,30 66,52" fill="#c8553d"/><circle cx="50" cy="46" r="6" fill="#f8f6ea"/><rect x="45" y="72" width="10" height="20" fill="#7a4a25"/><rect x="18" y="62" width="10" height="10" fill="#bfe3ff"/><rect x="72" y="62" width="10" height="10" fill="#bfe3ff"/><path d="M50 30V13" fill="none"/><polygon points="50,13 64,17 50,22" fill="#ffd23f"/>',
+    fire: '<rect x="14" y="20" width="22" height="72" fill="#c8553d"/><rect x="36" y="46" width="50" height="46" fill="#d1495b"/><rect x="44" y="62" width="34" height="30" fill="#f8f6ea"/><path d="M44 72h34M44 82h34" fill="none"/><rect x="20" y="28" width="10" height="10" fill="#bfe3ff"/><rect x="20" y="48" width="10" height="10" fill="#bfe3ff"/><circle cx="61" cy="54" r="5" fill="#ffd23f"/>',
+    tower: '<path d="M50 14V4" fill="none"/><rect x="30" y="14" width="40" height="78" fill="#8fb3d9"/>' + [22, 36, 50, 64].map(y => `<rect x="36" y="${y}" width="10" height="9" fill="#fff7c2"/><rect x="54" y="${y}" width="10" height="9" fill="#fff7c2"/>`).join('') + '<rect x="44" y="79" width="12" height="13" fill="#7a4a25"/>',
+    stadium: '<path d="M12 58V28M88 58V28" fill="none"/><rect x="6" y="20" width="12" height="8" fill="#ffd23f"/><rect x="82" y="20" width="12" height="8" fill="#ffd23f"/><ellipse cx="50" cy="68" rx="44" ry="24" fill="#9fb4c9"/><ellipse cx="50" cy="70" rx="32" ry="15" fill="#2ecc71"/><path d="M50 55v30" fill="none" stroke="#fff" stroke-width="2"/><circle cx="50" cy="70" r="5" fill="none" stroke="#fff" stroke-width="2"/>',
+    clock: '<rect x="36" y="34" width="28" height="58" fill="#b9a7f5"/><polygon points="32,34 50,8 68,34" fill="#6c5ce7"/><circle cx="50" cy="50" r="10" fill="#f8f6ea"/><path d="M50 50v-6M50 50l5 3" fill="none"/><rect x="44" y="74" width="12" height="18" fill="#7a4a25"/>'
+  };
+  function svg(t, part) {                 // part = how much is built, from 0 to 1 (it rises from the ground)
+    const id = 'cl' + (++uid), g = `stroke="${INK2}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"`;
+    if (part >= 1) return `<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="93" rx="44" ry="5" fill="rgba(0,0,0,.2)"/><g ${g}>${ART[t]}</g></svg>`;
+    const top = 4 + 88 * (1 - part);
+    return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><clipPath id="${id}"><rect x="0" y="${top}" width="100" height="100"/></clipPath></defs>
+      <ellipse cx="50" cy="93" rx="44" ry="5" fill="rgba(0,0,0,.2)"/><g ${g} opacity=".16">${ART[t]}</g><g ${g} clip-path="url(#${id})">${ART[t]}</g>
+      <path d="M8 ${top}h84" stroke="#ffd23f" stroke-width="3" stroke-dasharray="6 5" fill="none"/></svg>`;
+  }
+
+  /* ----- saved city ----- */
+  function data() { if (!save.city || !Array.isArray(save.city.lots)) save.city = { lots: Array(LOTS).fill(null) }; return save.city; }
+  function built() { return data().lots.filter(l => l && l.done); }
+  function population() { return built().reduce((n, l) => n + type(l.t).pop, 0); }
+  function cityName() { return teamName().split(' ')[0] + ' City'; }
+  function summary() { const n = built().length; return { n, pop: population(), icon: svg(n >= 7 ? 'tower' : n >= 2 ? 'shop' : 'house', 1), name: cityName() }; }
+
+  /* ----- city map ----- */
+  function renderCity() {
+    const d = data(), n = built().length, rank = RANKS.find(r => n >= r[0]);
+    $('city-title').textContent = cityName();
+    $('city-rank').textContent = rank ? `${cityName()} is ${rank[1]}! ${n} of ${LOTS} lots built.` : 'Tap a lot and solve problems to build your first building.';
+    $('city-pop').textContent = 'Population ' + population();
+    let h = '';
+    for (let r = 0; r < 3; r++) {
+      h += '<div class="lots">';
+      for (let i = r * 4; i < r * 4 + 4; i++) {
+        const l = d.lots[i];
+        if (!l) h += `<button class="lot" type="button" id="lot-${i}" data-lot="${i}" aria-label="Empty lot ${i + 1}">+</button>`;
+        else { const t = type(l.t); h += `<button class="lot built" type="button" id="lot-${i}" data-lot="${i}" aria-label="${t.name}${l.done ? '' : ', being built'}">${svg(l.t, l.done ? 1 : l.p / t.need)}${l.done ? (l.gold ? '<span class="gold" title="No mistakes">★</span>' : '') : `<span class="prog">${l.p}/${t.need}</span>`}</button>`; }
+      }
+      h += '</div><div class="road"></div>';
+    }
+    $('citymap').innerHTML = h; $('buildmenu').hidden = true;
+  }
+  function openMenu(i) {
+    const n = built().length, l = data().lots[i]; pickLot = i;
+    $('bm-title').textContent = l ? 'Replace this building with a new one?' : 'What will you build?';
+    $('bm-list').innerHTML = TYPES.map(t => {
+      const locked = n < t.unlock;
+      return `<button class="bm-item" type="button" id="bm-${t.id}" data-type="${t.id}" ${locked ? 'disabled' : ''}>${svg(t.id, 1)}<span class="bm-name">${t.name}</span><span class="bm-sub">${locked ? `Build ${t.unlock - n} more to open` : `${t.need} problems`}</span></button>`;
+    }).join('');
+    $('buildmenu').hidden = false; try { $('buildmenu').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+  }
+
+  /* ----- building site: solve problems to raise the building ----- */
+  function shared(inSite) {               // the coach card and helper tools are shared with the soccer game
+    if (inSite) { $('site-coach-slot').appendChild($('coach')); $('site-tools-slot').appendChild($('tools')); }
+    else { $('match').insertBefore($('coach'), $('next')); $('match').appendChild($('tools')); }
+    $('coach').hidden = true;
+  }
+  function draw() {
+    if (!pool.length) pool = shuffle(LEVELS.filter(L => L.group === 'week').flatMap(L => L.build(teamName())));
+    return pool.pop();
+  }
+  function startSite(i) { C = { lot: i, q: null, tries: 0, lock: false, done: false }; shared(true); show('site'); renderSite(); nextQ(); }
+  function renderSite() {
+    const l = data().lots[C.lot], t = type(l.t);
+    $('site-art').innerHTML = svg(l.t, l.done ? 1 : l.p / t.need);
+    $('site-name').textContent = l.done ? `${t.name} finished!` : `Building: ${t.name}`;
+    $('site-dots').innerHTML = Array.from({ length: t.need }, (_, k) => `<span class="dot ${k < l.p ? 'goal' : ''}"></span>`).join('');
+    $('site-note').textContent = l.done ? (l.gold ? 'No mistakes. It gets a gold star!' : 'Great building work.') : `${t.need - l.p} more right ${t.need - l.p === 1 ? 'answer' : 'answers'} to finish.`;
+  }
+  function eq(t) { const e = $('c-eq'); e.classList.toggle('small', t.length > 11); e.innerHTML = esc(glue(t)).replace('?', '<span class="q">?</span>'); }
+  function nextQ() {
+    const q = C.q = draw(); C.tries = 0; C.lock = false;
+    $('c-story').hidden = !q.text; $('c-story').textContent = q.text || '';
+    $('c-chips').hidden = !q.chips; $('c-chips').innerHTML = q.chips ? chipsHTML(q.chips) : '';
+    $('c-eq').hidden = !!q.chips; eq(q.text ? '?' : q.display);
+    q.opts.forEach((v, i) => { const b = $('c-ans-' + i); b.disabled = false; b.className = 'ans'; b.dataset.v = v; b.firstElementChild.textContent = v; b.setAttribute('aria-label', 'Answer ' + v); });
+    $('coach').hidden = true; $('site-next').hidden = true; tools.setQ(q);
+  }
+  function answer(i) {
+    if (!C || C.lock || C.done) return;
+    const q = C.q, b = $('c-ans-' + i), l = data().lots[C.lot], t = type(l.t), all = [0, 1, 2].map(k => $('c-ans-' + k));
+    C.lock = true; all.forEach(x => { x.disabled = true; });
+    if (Number(b.dataset.v) === q.ans) {
+      l.p++; b.classList.add('right'); $('c-eq').hidden = false; eq(q.solved);
+      if (l.p >= t.need) { l.done = true; l.gold = !l.miss; C.done = true; tone(WIN, 0.16); $('site-next').textContent = 'See my city'; $('site-next').hidden = false; $('site-art').classList.add('pop'); }
+      else { tone([523, 784], 0.1); const c0 = C; setTimeout(() => { if (C === c0) nextQ(); }, 950); }
+      store(); renderSite(); return;
+    }
+    tone(LOW, 0.2, 'sawtooth'); b.classList.add('out'); l.miss = (l.miss || 0) + 1; store();
+    if (C.tries === 0) { C.tries = 1; coach(q, false); all.forEach(x => { x.disabled = x.classList.contains('out'); }); C.lock = false; }
+    else {
+      all.forEach(x => { if (Number(x.dataset.v) === q.ans) x.classList.add('right'); });
+      coach(q, true); $('c-eq').hidden = false; eq(q.solved); $('site-next').textContent = 'Next problem'; $('site-next').hidden = false;
+    }
+  }
+  function leave() { shared(false); C = null; $('site-art').classList.remove('pop'); renderCity(); show('city'); }
+  function open() { renderCity(); show('city'); }
+  function init() {
+    $('citymap').addEventListener('click', e => {
+      const b = e.target.closest('.lot'); if (!b) return;
+      const i = Number(b.dataset.lot), l = data().lots[i];
+      if (l && !l.done) startSite(i); else openMenu(i);
+    });
+    $('bm-list').addEventListener('click', e => {
+      const b = e.target.closest('.bm-item'); if (!b || b.disabled) return;
+      data().lots[pickLot] = { t: b.dataset.type, p: 0, done: false, miss: 0 }; store(); startSite(pickLot);
+    });
+    $('bm-cancel').addEventListener('click', () => { $('buildmenu').hidden = true; });
+    $('c-answers').addEventListener('click', e => { const b = e.target.closest('.ans'); if (b && !b.disabled) answer(Number(b.id.slice(6))); });
+    $('site-next').addEventListener('click', () => { if (C.done) leave(); else nextQ(); });
+    $('site-leave').addEventListener('click', leave);
+    $('city-home').addEventListener('click', () => { renderHome(); show('home'); });
+  }
+  return { init, open, summary, debug: () => C };
+})();
+
 /* ================= WIRING ================= */
 function start(hotData) {
-  loadSave(hotData); renderHome(); tools.init();
+  loadSave(hotData); renderHome(); tools.init(); city.init();
+  $('open-city').addEventListener('click', () => city.open());
+  $('go-soccer').addEventListener('click', e => { e.preventDefault(); try { $('soccer').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) {} });
   const goHome = () => { stadium.stop(); M = null; renderHome(); show('home'); };
   $('team-name').addEventListener('input', e => { save.team = e.target.value; store(); });
   $('kits').addEventListener('change', e => { save.kit = e.target.value; document.documentElement.style.setProperty('--kit', TEAMS[save.kit].hex); store(); });
