@@ -11,6 +11,7 @@ The players, ball and goal nets are from the [Kenney Sports Pack](https://kenney
 ## Games on the page
 
 - **Goal Math League:** the soccer game described below.
+- **Treasure Voyage:** JJ sails a pirate ship (tap the sea, or use the arrow keys) and lands on the island with the right answer. Right answers turn up clues and, on the last island, the treasure chest. A wrong landing draws cannon fire from the pirate ship and a hint; a second miss lets the pirates take that clue. Three voyages cover Lessons 9-10, Lessons 11-12, and a mix. Ships, islands, palms, rocks, cannonball and explosions are from the [Kenney Pirate Pack](https://kenney.nl/assets/pirate-pack); the chest and bottle are preview images from the Kenney Pirate Kit. Both are CC0 (licenses in `assets/`). The sprites are in `assets/pirate-atlas.png` and embedded in `index.html` as `ATLAS2`.
 - **Math City:** every solved problem adds a piece to a building, and finished buildings fill a 12-lot city saved on the device. Problems are drawn from the matches under "This week in class". Buildings (house, park, shop, school, fire station, apartment tower, stadium, clock tower) unlock as the city grows, and a building finished with no mistakes gets a gold star. The buildings are drawn in code as small SVG pictures.
 
 ## What it covers
